@@ -1,2 +1,0 @@
-# ReactBoids
-Created with CodeSandbox
