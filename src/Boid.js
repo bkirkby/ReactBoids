@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 
 export default function Boid({ x, y, heading, radius, color, ctx, vision }) {
-  // CAH Cos(heading) = a/h
   useEffect(() => {
     // draw to canvas
     if (ctx) {
@@ -11,13 +10,16 @@ export default function Boid({ x, y, heading, radius, color, ctx, vision }) {
       // body and nose
       ctx.setLineDash([]);
       ctx.beginPath();
-      ctx.globalAlpha = 1;
+      ctx.globalAlpha = 0.71;
       ctx.fillStyle = color;
       ctx.strokeStyle = color;
       ctx.lineWidth = 1;
+
+      //circle and nose line
       ctx.arc(x, y, radius, 0, 2 * Math.PI);
       ctx.moveTo(x, y);
-      //ctx.lineTo(noseX, noseY);
+      ctx.lineTo(noseX, noseY);
+
       ctx.stroke();
       ctx.fill();
       ctx.closePath();

@@ -6,8 +6,8 @@ import Swarm from "./Swarm";
 
 export default function App() {
   const [ctx, setCtx] = useState();
-  const [canvasWidth] = useState(400);
-  const [canvasHeight] = useState(300);
+  const [canvasWidth] = useState(1024);
+  const [canvasHeight] = useState(768);
 
   useEffect(() => {
     const canvas = document.getElementsByTagName("canvas");

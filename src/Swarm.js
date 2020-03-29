@@ -165,7 +165,7 @@ export default function Swarm({ ctx, canvasWidth, canvasHeight }) {
     // setup code here
     const intervalId = setInterval(() => {
       handleStep();
-    }, 60);
+    }, 30);
     return () => {
       // teardown code here
       clearInterval(intervalId);
@@ -188,8 +188,29 @@ export default function Swarm({ ctx, canvasWidth, canvasHeight }) {
     );
   };
 
+  const handleAddBunch = () => {
+    const bunch = 100;
+    const radius = 6;
+    let newBoids = [];
+    for (let i = 0; i < bunch; i++) {
+      newBoids.push({
+        id: boidId + i,
+        x: Math.random() * canvasWidth,
+        y: Math.random() * canvasHeight,
+        radius: radius,
+        color: "red",
+        heading: Math.random() * 2 * Math.PI - Math.PI,
+        speed: Math.floor(Math.random() * (11 - 7 + 1) + 7),
+        vision: 35,
+        radialSpeed: Math.PI / 21
+      });
+    }
+    setBoids(boids.concat(newBoids));
+    setBoidId(boidId + bunch);
+  };
+
   const handleAddOne = () => {
-    const radius = 3;
+    const radius = 6;
     setBoids([
       ...boids,
       {
@@ -199,8 +220,8 @@ export default function Swarm({ ctx, canvasWidth, canvasHeight }) {
         radius: radius,
         color: "red",
         heading: Math.random() * 2 * Math.PI - Math.PI,
-        speed: Math.random() * 5 + 3,
-        vision: 50,
+        speed: Math.floor(Math.random() * (9 - 5 + 1) + 5),
+        vision: 35,
         radialSpeed: Math.PI / 15
       }
     ]);
@@ -224,6 +245,7 @@ export default function Swarm({ ctx, canvasWidth, canvasHeight }) {
       <div>
         <button onClick={handleRandomClick}>random</button>
         <button onClick={handleAddOne}>add one</button>
+        <button onClick={handleAddBunch}>add bunch</button>
         <button onClick={handleStep}>step</button>
       </div>
     </>
