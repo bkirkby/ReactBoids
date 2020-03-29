@@ -15,9 +15,9 @@ export default function Boid({ x, y, heading, radius, color, ctx, vision }) {
       ctx.fillStyle = color;
       ctx.strokeStyle = color;
       ctx.lineWidth = 1;
-      ctx.arc(x, y, radius, 0, 1.9 * Math.PI);
+      ctx.arc(x, y, radius, 0, 2 * Math.PI);
       ctx.moveTo(x, y);
-      ctx.lineTo(noseX, noseY);
+      //ctx.lineTo(noseX, noseY);
       ctx.stroke();
       ctx.fill();
       ctx.closePath();
@@ -29,9 +29,9 @@ export default function Boid({ x, y, heading, radius, color, ctx, vision }) {
         ctx.arc(x, y, vision, 0, 2 * Math.PI);
         ctx.stroke();
         ctx.closePath();
-        ctx.beginPath();
-        ctx.arc(x, y, radius, 0, 2 * Math.PI);
-        ctx.stroke();
+        // ctx.beginPath();
+        // ctx.arc(x, y, radius, 0, 2 * Math.PI);
+        // ctx.stroke();
       }
     }
   }, [x, y, radius, heading, color, ctx, vision]);
