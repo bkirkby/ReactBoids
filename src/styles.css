@@ -1,8 +1,36 @@
 .App {
-  font-family: sans-serif;
+  font-family: monospace;
   text-align: center;
+}
+
+.app {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  flex-basis: 600px;
+}
+
+.counters {
+  border: 2px solid black;
+  flex-basis: 100%;
+  justify-content: space-between;
+  align-content: center;
 }
 
 canvas {
   border: 2px solid black;
+  flex-basis: 100%;
+}
+
+span {
+  font-family: monospace;
+  padding: 5px;
+}
+
+span.infected {
+  color: red;
+}
+
+span.normal {
+  color: blue;
 }

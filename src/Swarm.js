@@ -9,52 +9,27 @@ import {
   pointDistance
 } from "./boidsUtils";
 
-export default function Swarm({ ctx, canvasWidth, canvasHeight }) {
+export default function Swarm({
+  boidsCtx,
+  canvasWidth,
+  canvasHeight,
+  boids,
+  setBoids,
+  switchDisplayBuffer
+}) {
   const [step, setStep] = useState(1);
   const [boidId, setBoidId] = useState(3);
-  const [boids, setBoids] = useState([
-    // {
-    //   id: 0,
-    //   x: 20,
-    //   y: 100,
-    //   radius: 3,
-    //   color: "red",
-    //   heading: 0,
-    //   speed: 3,
-    //   vision: 60,
-    //   radialSpeed: Math.PI / 9
-    // },
-    // {
-    //   id: 1,
-    //   x: 60,
-    //   y: 100,
-    //   radius: 3,
-    //   color: "red",
-    //   heading: Math.PI,
-    //   speed: 3,
-    //   vision: 60,
-    //   radialSpeed: Math.PI / 9
-    // },
-    // {
-    //   id: 2,
-    //   x: 40,
-    //   y: 50,
-    //   radius: 3,
-    //   color: "red",
-    //   heading: Math.PI,
-    //   speed: 3,
-    //   vision: 60,
-    //   radialSpeed: Math.PI / 9
-    // }
-  ]);
+  //  const [boids, setBoids] = useState([]);
+  const [infectionRadius, setInfectionRadius] = useState(3);
+  const [isPaused, setIsPaused] = useState(false);
   const clearCanvas = useCallback(() => {
-    if (ctx) {
-      ctx.beginPath();
-      ctx.fillStyle = "black";
-      ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-      ctx.closePath();
+    if (boidsCtx) {
+      boidsCtx.beginPath();
+      boidsCtx.fillStyle = "red";
+      boidsCtx.clearRect(0, 0, canvasWidth, canvasHeight);
+      boidsCtx.closePath();
     }
-  }, [canvasHeight, canvasWidth, ctx]);
+  }, [canvasHeight, canvasWidth, boidsCtx]);
 
   const wrap = (val, min, max) => {
     if (val < min) {
@@ -70,10 +45,6 @@ export default function Swarm({ ctx, canvasWidth, canvasHeight }) {
     boid => {
       return boids.filter(neighbor => {
         // check if near boid
-        // const distance = Math.sqrt(
-        //   Math.exp(Math.abs(neighbor.x - boid.x), 2) +
-        //     Math.exp(Math.abs(neighbor.y - boid.y), 2)
-        // );
         return (
           pointDistance(
             { x: boid.x, y: boid.y },
@@ -92,15 +63,31 @@ export default function Swarm({ ctx, canvasWidth, canvasHeight }) {
       // 2. alignment - steer toward average heading of neighbors
       // 3. cohesion - steer toward average position of neighbors
 
+      //const infectionRadius = boid.radius * 2;
+
       const neighbors = getNeighbors(boid);
 
       let heading = boid.heading;
+      let state = boid.state;
 
       if (neighbors && neighbors.length > 0) {
         const cohesionHeading = calcCohesionHeading(boid, neighbors);
         const alignmentHeading = calcAlignmentHeading(neighbors);
         const separationHeading = calcSeparationHeading(boid, neighbors);
 
+        // check infection
+        const infectedCloseNeighbors = neighbors.filter(neighbor => {
+          return (
+            pointDistance(boid, neighbor) < infectionRadius &&
+            neighbor.state === "infected"
+          );
+        });
+
+        if (infectedCloseNeighbors && infectedCloseNeighbors.length > 0) {
+          state = "infected";
+        }
+
+        // change heading
         if (alignmentHeading !== null && cohesionHeading !== null) {
           // figure the target by averaging the cohesion, alignment, and separation
           let sumSin = Math.sin(cohesionHeading) + Math.sin(alignmentHeading);
@@ -142,12 +129,17 @@ export default function Swarm({ ctx, canvasWidth, canvasHeight }) {
 
       return {
         ...boid,
-        x: wrap(boid.x + Math.cos(heading) * boid.speed, 0, canvasWidth),
-        y: wrap(boid.y + Math.sin(heading) * boid.speed, 0, canvasHeight),
-        heading
+        x: isPaused
+          ? boid.x
+          : wrap(boid.x + Math.cos(heading) * boid.speed, 0, canvasWidth),
+        y: isPaused
+          ? boid.y
+          : wrap(boid.y + Math.sin(heading) * boid.speed, 0, canvasHeight),
+        heading: isPaused ? boid.heading : heading,
+        state
       };
     },
-    [canvasHeight, canvasWidth, getNeighbors]
+    [canvasHeight, canvasWidth, getNeighbors, infectionRadius, isPaused]
   );
 
   const handleStep = useCallback(() => {
@@ -159,13 +151,28 @@ export default function Swarm({ ctx, canvasWidth, canvasHeight }) {
         return stepBoid(boid);
       })
     );
-  }, [boids, clearCanvas, step, stepBoid]);
+  }, [boids, clearCanvas, step, stepBoid, setBoids]);
+
+  const handleInfect = () => {
+    const rndmIdx = Math.floor(Math.random() * boids.length);
+    setBoids(
+      boids.map((boid, i) => {
+        if (i === rndmIdx) {
+          return {
+            ...boid,
+            state: "infected"
+          };
+        }
+        return boid;
+      })
+    );
+  };
 
   useEffect(() => {
     // setup code here
     const intervalId = setInterval(() => {
       handleStep();
-    }, 30);
+    }, 40);
     return () => {
       // teardown code here
       clearInterval(intervalId);
@@ -173,7 +180,7 @@ export default function Swarm({ ctx, canvasWidth, canvasHeight }) {
   }, [clearCanvas, handleStep]);
 
   const handleRandomClick = () => {
-    if (ctx) {
+    if (boidsCtx) {
       clearCanvas();
     }
     setBoids(
@@ -189,8 +196,8 @@ export default function Swarm({ ctx, canvasWidth, canvasHeight }) {
   };
 
   const handleAddBunch = () => {
-    const bunch = 100;
-    const radius = 6;
+    const bunch = 50;
+    const radius = 1;
     let newBoids = [];
     for (let i = 0; i < bunch; i++) {
       newBoids.push({
@@ -198,11 +205,11 @@ export default function Swarm({ ctx, canvasWidth, canvasHeight }) {
         x: Math.random() * canvasWidth,
         y: Math.random() * canvasHeight,
         radius: radius,
-        color: "red",
         heading: Math.random() * 2 * Math.PI - Math.PI,
-        speed: Math.floor(Math.random() * (11 - 7 + 1) + 7),
+        speed: Math.floor(Math.random() * (6 - 2 + 1) + 4),
         vision: 35,
-        radialSpeed: Math.PI / 21
+        radialSpeed: Math.PI / 21,
+        state: "normal"
       });
     }
     setBoids(boids.concat(newBoids));
@@ -210,7 +217,7 @@ export default function Swarm({ ctx, canvasWidth, canvasHeight }) {
   };
 
   const handleAddOne = () => {
-    const radius = 6;
+    const radius = 1;
     setBoids([
       ...boids,
       {
@@ -218,11 +225,11 @@ export default function Swarm({ ctx, canvasWidth, canvasHeight }) {
         x: Math.random() * canvasWidth,
         y: Math.random() * canvasHeight,
         radius: radius,
-        color: "red",
         heading: Math.random() * 2 * Math.PI - Math.PI,
-        speed: Math.floor(Math.random() * (9 - 5 + 1) + 5),
+        speed: Math.floor(Math.random() * (6 - 2 + 1) + 3),
         vision: 35,
-        radialSpeed: Math.PI / 15
+        radialSpeed: Math.PI / 15,
+        state: "normal" // normal, infected, immune
       }
     ]);
     setBoidId(boidId + 1);
@@ -235,10 +242,11 @@ export default function Swarm({ ctx, canvasWidth, canvasHeight }) {
           key={boid.id}
           x={boid.x}
           y={boid.y}
-          ctx={ctx}
+          ctx={boidsCtx}
           radius={boid.radius}
           heading={boid.heading}
           color="red"
+          state={boid.state}
           //vision={boid.vision}
         />
       ))}
@@ -247,6 +255,11 @@ export default function Swarm({ ctx, canvasWidth, canvasHeight }) {
         <button onClick={handleAddOne}>add one</button>
         <button onClick={handleAddBunch}>add bunch</button>
         <button onClick={handleStep}>step</button>
+        <button onClick={handleInfect}>infect</button>
+        <button onClick={() => setBoids([])}>reset</button>
+        <button onClick={() => setIsPaused(!isPaused)}>
+          {isPaused ? "resume" : "pause"}
+        </button>
       </div>
     </>
   );

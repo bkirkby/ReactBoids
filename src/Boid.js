@@ -1,6 +1,20 @@
 import React, { useEffect } from "react";
 
-export default function Boid({ x, y, heading, radius, color, ctx, vision }) {
+export default function Boid({
+  x,
+  y,
+  heading,
+  radius,
+  color,
+  ctx,
+  vision,
+  state
+}) {
+  const stateColors = {
+    normal: "white",
+    infected: "red",
+    immune: "pink"
+  };
   useEffect(() => {
     // draw to canvas
     if (ctx) {
@@ -11,8 +25,8 @@ export default function Boid({ x, y, heading, radius, color, ctx, vision }) {
       ctx.setLineDash([]);
       ctx.beginPath();
       ctx.globalAlpha = 0.71;
-      ctx.fillStyle = color;
-      ctx.strokeStyle = color;
+      ctx.fillStyle = stateColors[state];
+      ctx.strokeStyle = stateColors[state];
       ctx.lineWidth = 1;
 
       //circle and nose line
@@ -36,7 +50,7 @@ export default function Boid({ x, y, heading, radius, color, ctx, vision }) {
         // ctx.stroke();
       }
     }
-  }, [x, y, radius, heading, color, ctx, vision]);
+  }, [x, y, radius, heading, state, stateColors, ctx, vision]);
 
   return <></>;
 }
