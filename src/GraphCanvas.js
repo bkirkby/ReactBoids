@@ -7,7 +7,7 @@ export default function GraphCanvas({ canvasWidth, canvasHeight, boids }) {
 
   useEffect(() => {
     // drawGraph
-    const lineWidth = 3;
+    const lineWidth = 1;
     if (ctx) {
       ctx.clearRect(0, 0, canvasWidth, canvasHeight);
       boidGraph.forEach((bg, i) => {
