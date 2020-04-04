@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 
-export default function GraphCanvas({ canvasWidth, canvasHeight, boids }) {
+export default function GraphCanvas({ canvasWidth, canvasHeight, boids, id }) {
   const [ctx, setCtx] = useState();
   const [boidGraph, setBoidGraph] = useState([]); // {numInfected:0, numNormal:0}
   const [lastGraphUpdate, setLastGraphUpdate] = useState(Date.now());
@@ -57,8 +57,8 @@ export default function GraphCanvas({ canvasWidth, canvasHeight, boids }) {
   }, [lastGraphUpdate]);
 
   useEffect(() => {
-    setCtx(document.getElementById("graph").getContext("2d"));
-  }, []);
+    setCtx(document.getElementById(id).getContext("2d"));
+  }, [id]);
 
   useEffect(() => {
     setLastGraphUpdate(Date.now());
@@ -100,7 +100,7 @@ export default function GraphCanvas({ canvasWidth, canvasHeight, boids }) {
 
   return (
     <div className="graphContainer">
-      <canvas id="graph" width={canvasWidth} height={canvasHeight} />
+      <canvas id={id} width={canvasWidth} height={canvasHeight} />
       <div>
         <button onClick={handleStepBoidGraph}>step</button>
         <button

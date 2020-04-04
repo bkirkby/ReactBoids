@@ -4,31 +4,26 @@ import "./styles.css";
 import BirdCanvas from "./BirdCanvas";
 import GraphCanvas from "./GraphCanvas";
 import Swarm from "./Swarm";
+import SimulationHistory from "./SimulationHistory";
 
 export default function App() {
-  const [boidsCtx, setBoidsCtx] = useState();
-  // const [boidsCtx2, setBoidsCtx2] = useState();
-  const [canvasWidth] = useState(400);
-  const [canvasHeight] = useState(300);
-  const [boids, setBoids] = useState([]);
-  // const [dispBuffer, setDispBuffer] = useState(1);
+  const [boidsNormalCtx, setBoidsNormalCtx] = useState();
+  // const [boidsSDCtx, setBoidsSDCtx] = useState();
+  // const [boidsIsolationCtx, setBoidsIsolationCtx] = useState();
+  const [canvasWidth] = useState(300);
+  const [canvasHeight] = useState(200);
+  const [boidsNormal, setBoidsNormal] = useState([]);
+  // const [boidsSD, setBoidsSD] = useState([]);
+  // const [boidsIsolation, setBoidsIsolation] = useState([]);
 
   useEffect(() => {
-    const canvasOne = document.getElementById("boidsCanvas-one");
-    setBoidsCtx(canvasOne.getContext("2d"));
-    // const canvasTwo = document.getElementById("boidsCanvas-two");
-    // setBoidsCtx2(canvasTwo.getContext("2d"));
+    const canvasNormal = document.getElementById("boidsCanvas-normal");
+    setBoidsNormalCtx(canvasNormal.getContext("2d"));
+    // const canvasSD = document.getElementById("boidsCanvas-sd");
+    // setBoidsSDCtx(canvasSD.getContext("2d"));
+    // const canvasIsolation = document.getElementById("boidsCanvas-isolation");
+    // setBoidsIsolationCtx(canvasIsolation.getContext("2d"));
   }, []);
-
-  // const switchDisplayBuffer = useCallback(() => {
-  //   setDispBuffer(dispBuffer => {
-  //     return dispBuffer === 1 ? 2 : 1;
-  //   });
-  // }, [setDispBuffer]);
-
-  // useEffect(() => {
-  //   switchDisplayBuffer();
-  // }, [boids, switchDisplayBuffer]);
 
   const zeroFill = num => {
     let ret = "";
@@ -41,27 +36,95 @@ export default function App() {
 
   return (
     <div className="app">
-      <GraphCanvas boids={boids} canvasWidth={canvasWidth} canvasHeight={50} />
-      <div className="counters" style={{ flexBasis: canvasWidth }}>
-        <span className="normal">{zeroFill(boids.length)}</span>
-        <span className="infected">
-          {zeroFill(boids.filter(b => b.state === "infected").length)}
-        </span>
-      </div>
-      <div className="boidContainer">
-        <BirdCanvas
-          id="boidsCanvas-one"
+      <div className="normalContainer">
+        <GraphCanvas
+          boids={boidsNormal}
           canvasWidth={canvasWidth}
-          canvasHeight={canvasHeight}
+          canvasHeight={50}
+          id={"graphCanvas-normal"}
         />
-        <Swarm
-          boidsCtx={boidsCtx}
-          canvasWidth={canvasWidth}
-          canvasHeight={canvasHeight}
-          boids={boids}
-          setBoids={setBoids}
-        />
+        <div className="counters" style={{ flexBasis: canvasWidth }}>
+          <span className="normal">{zeroFill(boidsNormal.length)}</span>
+          <span className="infected">
+            {zeroFill(boidsNormal.filter(b => b.state === "infected").length)}
+          </span>
+        </div>
+        <div className="boidContainer">
+          <BirdCanvas
+            id="boidsCanvas-normal"
+            canvasWidth={canvasWidth}
+            canvasHeight={canvasHeight}
+          />
+          <Swarm
+            boidsCtx={boidsNormalCtx}
+            canvasWidth={canvasWidth}
+            canvasHeight={canvasHeight}
+            boids={boidsNormal}
+            setBoids={setBoidsNormal}
+          />
+        </div>
+        <SimulationHistory />
       </div>
+      {/*<div className="sdContainer">
+        <h2>social distancing</h2>
+        <GraphCanvas
+          boids={boidsSD}
+          canvasWidth={canvasWidth}
+          canvasHeight={50}
+          id={"graphCanvas-sd"}
+        />
+        <div className="counters" style={{ flexBasis: canvasWidth }}>
+          <span className="normal">{zeroFill(boidsSD.length)}</span>
+          <span className="infected">
+            {zeroFill(boidsSD.filter(b => b.state === "infected").length)}
+          </span>
+        </div>
+        <div className="boidContainer">
+          <BirdCanvas
+            id="boidsCanvas-sd"
+            canvasWidth={canvasWidth}
+            canvasHeight={canvasHeight}
+          />
+          <Swarm
+            boidsCtx={boidsSDCtx}
+            canvasWidth={canvasWidth}
+            canvasHeight={canvasHeight}
+            boids={boidsSD}
+            setBoids={setBoidsSD}
+          />
+        </div>
+      </div>
+      <div className="isoContainer">
+        <h2>isolation</h2>
+        <GraphCanvas
+          boids={boidsIsolation}
+          canvasWidth={canvasWidth}
+          canvasHeight={50}
+          id={"graphCanvas-isolation"}
+        />
+        <div className="counters" style={{ flexBasis: canvasWidth }}>
+          <span className="normal">{zeroFill(boidsIsolation.length)}</span>
+          <span className="infected">
+            {zeroFill(
+              boidsIsolation.filter(b => b.state === "infected").length
+            )}
+          </span>
+        </div>
+        <div className="boidContainer">
+          <BirdCanvas
+            id="boidsCanvas-isolation"
+            canvasWidth={canvasWidth}
+            canvasHeight={canvasHeight}
+          />
+          <Swarm
+            boidsCtx={boidsIsolationCtx}
+            canvasWidth={canvasWidth}
+            canvasHeight={canvasHeight}
+            boids={boidsIsolation}
+            setBoids={setBoidsIsolation}
+          />
+            </div>
+      </div>*/}
     </div>
   );
 }

@@ -35,7 +35,7 @@ export const calcCohesionHeading = (boid, neighbors) => {
 };
 
 export const calcSeparationHeading = (boid, neighbors) => {
-  const separationRadius = boid.radius * 4;
+  const separationRadius = 15; //0,10,20,30,40
   if (!neighbors || neighbors.length <= 0) {
     return null;
   }

@@ -3,12 +3,14 @@
   text-align: center;
 }
 
+h2 {
+  font-family: monospace;
+}
+
 .app {
   display: flex;
   flex-flow: row wrap;
   justify-content: space-between;
-  flex-basis: 600px;
-  max-width: 600px;
 }
 
 .counters {
@@ -27,6 +29,17 @@
   flex-flow: column;
 }
 
+.normalContainer .sdContainer .isoContainer {
+  display: flex;
+  flex-flow: row wrap;
+  flex-basis: 600px;
+  max-width: 600px;
+}
+
+.simulationHistoryContainer {
+  padding: 1px;
+}
+
 canvas {
   border: 2px solid black;
 }
@@ -42,4 +55,9 @@ span.infected {
 
 span.normal {
   color: blue;
+}
+
+svg {
+  border: 1px solid black;
+  padding: 1px;
 }

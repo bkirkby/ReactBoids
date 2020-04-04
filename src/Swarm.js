@@ -14,8 +14,7 @@ export default function Swarm({
   canvasWidth,
   canvasHeight,
   boids,
-  setBoids,
-  switchDisplayBuffer
+  setBoids
 }) {
   const [step, setStep] = useState(1);
   const [boidId, setBoidId] = useState(3);
