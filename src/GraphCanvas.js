@@ -1,20 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 
 export default function GraphCanvas({ canvasWidth, canvasHeight, boids }) {
   const [ctx, setCtx] = useState();
   const [boidGraph, setBoidGraph] = useState([]); // {numInfected:0, numNormal:0}
+  const [lastGraphUpdate, setLastGraphUpdate] = useState(Date.now());
 
   useEffect(() => {
-    // clearCanvas
-    // if (ctx) {
-    //   ctx.beginPath();
-    //   ctx.fillStyle = "red";
-    //   ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-    //   ctx.closePath();
-    // }
     // drawGraph
-    const lineWidth = 2;
+    const lineWidth = 3;
     if (ctx) {
+      ctx.clearRect(0, 0, canvasWidth, canvasHeight);
       boidGraph.forEach((bg, i) => {
         const infectedHeight = (bg.numInfected / bg.numNormal) * canvasHeight;
         const normalHeight = canvasHeight - infectedHeight;
@@ -39,27 +34,83 @@ export default function GraphCanvas({ canvasWidth, canvasHeight, boids }) {
     }
   }, [ctx, boidGraph, canvasHeight, canvasWidth]);
 
-  const stepBoidGraph = () => {
-    setBoidGraph([
-      ...boidGraph,
-      {
-        numNormal: boids.length,
-        numInfected: boids.filter(b => b.state === "infected").length
-      }
-    ]);
+  const handleStepBoidGraph = e => {
+    e.preventDefault();
+    const numInfected = boids.filter(b => b.state === "infected").length;
+    const numTotal = boids.length;
+    if (numInfected < numTotal) {
+      setBoidGraph(boidGraph => {
+        return [
+          ...boidGraph,
+          {
+            numNormal: numTotal,
+            numInfected: numInfected
+          }
+        ];
+      });
+    }
   };
+
+  const shouldUpdateBoidGraph = useCallback(() => {
+    const graphUpdateInterval = 60;
+    return lastGraphUpdate + graphUpdateInterval <= Date.now();
+  }, [lastGraphUpdate]);
 
   useEffect(() => {
     setCtx(document.getElementById("graph").getContext("2d"));
-    // setInterval(()=>{
-    //   stepBoidGraph();
-    // }, 1000);
   }, []);
 
+  useEffect(() => {
+    setLastGraphUpdate(Date.now());
+  }, [boidGraph]);
+
+  useEffect(() => {
+    // updateBoidGraph
+    const numInfected = boids.filter(b => b.state === "infected").length;
+    if (shouldUpdateBoidGraph()) {
+      if (boids.length && numInfected === boids.length) {
+        setBoidGraph(boidGraph => {
+          const lastNumNormal = boidGraph.length
+            ? boidGraph[boidGraph.length - 1].numNormal
+            : 0;
+          const lastNumInfected = boidGraph.length
+            ? boidGraph[boidGraph.length - 1].numInfected
+            : 0;
+          if (lastNumNormal > lastNumInfected) {
+            return [
+              ...boidGraph,
+              { numNormal: boids.length, numInfected: boids.length }
+            ];
+          }
+          return boidGraph;
+        });
+      } else if (boids.length && numInfected < boids.length && numInfected) {
+        setBoidGraph(boidGraph => {
+          return [
+            ...boidGraph,
+            {
+              numNormal: boids.length,
+              numInfected: boids.filter(b => b.state === "infected").length
+            }
+          ];
+        });
+      }
+    }
+  }, [boids, shouldUpdateBoidGraph]);
+
   return (
-    <>
+    <div className="graphContainer">
       <canvas id="graph" width={canvasWidth} height={canvasHeight} />
-      <button onClick={() => stepBoidGraph()}>step</button>
-    </>
+      <div>
+        <button onClick={handleStepBoidGraph}>step</button>
+        <button
+          onClick={() => {
+            setBoidGraph([]);
+          }}
+        >
+          reset
+        </button>
+      </div>
+    </div>
   );
 }

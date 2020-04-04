@@ -42,30 +42,26 @@ export default function App() {
   return (
     <div className="app">
       <GraphCanvas boids={boids} canvasWidth={canvasWidth} canvasHeight={50} />
-      <div className="counters">
+      <div className="counters" style={{ flexBasis: canvasWidth }}>
         <span className="normal">{zeroFill(boids.length)}</span>
         <span className="infected">
           {zeroFill(boids.filter(b => b.state === "infected").length)}
         </span>
       </div>
-      <BirdCanvas
-        id="boidsCanvas-one"
-        canvasWidth={canvasWidth}
-        canvasHeight={canvasHeight}
-      />
-      {/*<BirdCanvas
-        id="boidsCanvas-two"
-        canvasWidth={canvasWidth}
-        canvasHeight={canvasHeight}
-        show={dispBuffer === 2 ? true : false}
-      />*/}
-      <Swarm
-        boidsCtx={boidsCtx}
-        canvasWidth={canvasWidth}
-        canvasHeight={canvasHeight}
-        boids={boids}
-        setBoids={setBoids}
-      />
+      <div className="boidContainer">
+        <BirdCanvas
+          id="boidsCanvas-one"
+          canvasWidth={canvasWidth}
+          canvasHeight={canvasHeight}
+        />
+        <Swarm
+          boidsCtx={boidsCtx}
+          canvasWidth={canvasWidth}
+          canvasHeight={canvasHeight}
+          boids={boids}
+          setBoids={setBoids}
+        />
+      </div>
     </div>
   );
 }

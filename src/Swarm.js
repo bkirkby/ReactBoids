@@ -201,7 +201,7 @@ export default function Swarm({
 
   const handleAddBunch = () => {
     const bunch = 50;
-    const radius = 3;
+    const radius = 1;
     let newBoids = [];
     for (let i = 0; i < bunch; i++) {
       newBoids.push({
@@ -221,7 +221,7 @@ export default function Swarm({
   };
 
   const handleAddOne = () => {
-    const radius = 3;
+    const radius = 1;
     setBoids([
       ...boids,
       {

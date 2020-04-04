@@ -8,13 +8,23 @@
   flex-flow: row wrap;
   justify-content: space-between;
   flex-basis: 600px;
+  max-width: 600px;
 }
 
 .counters {
   border: 2px solid black;
-  flex-basis: 100%;
   justify-content: space-between;
   align-content: center;
+}
+
+.graphContainer {
+  display: flex;
+  flex-flow: column;
+}
+
+.boidContainer {
+  display: flex;
+  flex-flow: column;
 }
 
 canvas {
