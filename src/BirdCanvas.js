@@ -8,7 +8,7 @@ export default function BirdCanvas(props) {
       height={props.canvasHeight}
       style={{
         backgroundColor: "black",
-        display: props.show ? "flex" : "none"
+        flexBasis: props.canvasWidth + "px"
       }}
     />
   );

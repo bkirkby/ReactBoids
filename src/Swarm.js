@@ -19,8 +19,7 @@ export default function Swarm({
 }) {
   const [step, setStep] = useState(1);
   const [boidId, setBoidId] = useState(3);
-  //  const [boids, setBoids] = useState([]);
-  const [infectionRadius, setInfectionRadius] = useState(3);
+  const [infectionRadius, setInfectionRadius] = useState(8);
   const [isPaused, setIsPaused] = useState(false);
   const clearCanvas = useCallback(() => {
     if (boidsCtx) {
@@ -30,6 +29,7 @@ export default function Swarm({
       boidsCtx.closePath();
     }
   }, [canvasHeight, canvasWidth, boidsCtx]);
+  // const animFrameReq = useRef();
 
   const wrap = (val, min, max) => {
     if (val < min) {
@@ -64,6 +64,8 @@ export default function Swarm({
       // 3. cohesion - steer toward average position of neighbors
 
       //const infectionRadius = boid.radius * 2;
+
+      // animFrameReq.current = requestAnimationFrame(stepBoid);
 
       const neighbors = getNeighbors(boid);
 
@@ -173,11 +175,13 @@ export default function Swarm({
     const intervalId = setInterval(() => {
       handleStep();
     }, 40);
+    //requestAnimationFrame(handleStep);
     return () => {
       // teardown code here
       clearInterval(intervalId);
+      // cancelAnimationFrame(animFrameReq.current);
     };
-  }, [clearCanvas, handleStep]);
+  }, [handleStep]);
 
   const handleRandomClick = () => {
     if (boidsCtx) {
@@ -197,7 +201,7 @@ export default function Swarm({
 
   const handleAddBunch = () => {
     const bunch = 50;
-    const radius = 1;
+    const radius = 3;
     let newBoids = [];
     for (let i = 0; i < bunch; i++) {
       newBoids.push({
@@ -217,7 +221,7 @@ export default function Swarm({
   };
 
   const handleAddOne = () => {
-    const radius = 1;
+    const radius = 3;
     setBoids([
       ...boids,
       {
