@@ -18,9 +18,9 @@ export default function Swarm({
   resetCallback
 }) {
   const [step, setStep] = useState(1);
-  const [boidId, setBoidId] = useState(3);
-  const [infectionRadius, setInfectionRadius] = useState(8);
-  const [sdFactor, setSdFactor] = useState(5);
+  const [boidId, setBoidId] = useState(6);
+  const [infectionRadius, setInfectionRadius] = useState(3);
+  const [sdFactor, setSdFactor] = useState(0);
   const [isolationFactor, setIsolationFactor] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
 
@@ -56,6 +56,12 @@ export default function Swarm({
     },
     [boids]
   );
+
+  const getBoidSpeed = () => {
+    const max = 8;
+    const min = 5;
+    return Math.floor(Math.random() * (max - min + 1) + min);
+  };
 
   const stepBoid = useCallback(
     boid => {
@@ -134,6 +140,13 @@ export default function Swarm({
         }
       }
 
+      const newSpeed =
+        boid.speed === 0
+          ? boid.speed
+          : Math.random() < 0.005
+          ? getBoidSpeed()
+          : boid.speed;
+
       return {
         ...boid,
         x: isPaused
@@ -143,6 +156,7 @@ export default function Swarm({
           ? boid.y
           : wrap(boid.y + Math.sin(heading) * boid.speed, 0, canvasHeight),
         heading: isPaused ? boid.heading : heading,
+        speed: newSpeed,
         state
       };
     },
@@ -181,8 +195,6 @@ export default function Swarm({
       })
     );
   };
-
-  const getBoidSpeed = () => Math.floor(Math.random() * (6 - 2 + 1) + 4);
 
   useEffect(() => {
     // isolation

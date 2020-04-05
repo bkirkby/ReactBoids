@@ -12,7 +12,7 @@ export default function Boid({
 }) {
   const stateColors = {
     normal: "white",
-    infected: "red",
+    infected: "#ffcc00",
     immune: "pink"
   };
   useEffect(() => {
@@ -34,19 +34,19 @@ export default function Boid({
       ctx.moveTo(x, y);
       ctx.lineTo(noseX, noseY);
       ctx.closePath();
+      ctx.stroke();
+      ctx.fill();
 
       if (vision) {
         ctx.setLineDash([2, 2]);
-        ctx.lineWidth = 1;
+        ctx.lineWidth = 2;
         ctx.beginPath();
-        ctx.strokeStyle = "#66ff00";
+        //ctx.strokeStyle = "#66ff00";
         ctx.arc(x, y, vision, 0, 2 * Math.PI);
         // ctx.beginPath();
         // ctx.arc(x, y, radius, 0, 2 * Math.PI);
-        // ctx.stroke();
+        ctx.stroke();
       }
-      ctx.stroke();
-      ctx.fill();
     }
   }, [x, y, radius, heading, state, stateColors, ctx, vision]);
 

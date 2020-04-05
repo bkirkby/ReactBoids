@@ -10,8 +10,8 @@ export default function App() {
   const [boidsNormalCtx, setBoidsNormalCtx] = useState();
   // const [boidsSDCtx, setBoidsSDCtx] = useState();
   // const [boidsIsolationCtx, setBoidsIsolationCtx] = useState();
-  const [canvasWidth] = useState(500);
-  const [canvasHeight] = useState(250);
+  const [canvasWidth] = useState(400);
+  const [canvasHeight] = useState(350);
   const [boidsNormal, setBoidsNormal] = useState([]);
   const [resetCbs, setResetCbs] = useState([]);
   // const [boidsSD, setBoidsSD] = useState([]);
@@ -55,7 +55,7 @@ export default function App() {
           id={"graphCanvas-normal"}
           addResetListener={addResetListener}
         />
-        <div className="counters" style={{ flexBasis: canvasWidth }}>
+        <div className="counters">
           <span className="normal">{zeroFill(boidsNormal.length)}</span>
           <span className="infected">
             {zeroFill(boidsNormal.filter(b => b.state === "infected").length)}

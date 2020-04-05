@@ -34,7 +34,7 @@ export default function SimulationHistory(props) {
               y="0"
               width={svgWidth}
               height={svgHeight}
-              style={{ fill: "blue" }}
+              style={{ fill: "black" }}
             />
             {h.lines.map((line, i) => {
               const lineHeight = svgHeight * line;
@@ -44,7 +44,7 @@ export default function SimulationHistory(props) {
                   y={svgHeight - lineHeight}
                   width="1"
                   height={lineHeight}
-                  style={{ fill: "red" }}
+                  style={{ fill: "#ffcc00" }}
                 />
               );
             })}

@@ -29,7 +29,7 @@ export default function GraphCanvas({
 
         // infected
         ctx.beginPath();
-        ctx.fillStyle = "red";
+        ctx.fillStyle = "#ffcc00";
         ctx.fillRect(
           i * lineWidth,
           canvasHeight - infectedHeight,
@@ -40,7 +40,7 @@ export default function GraphCanvas({
 
         // normal
         ctx.beginPath();
-        ctx.fillStyle = "blue";
+        ctx.fillStyle = "black";
         ctx.fillRect(i * lineWidth, 0, lineWidth, normalHeight);
         ctx.closePath();
       });
