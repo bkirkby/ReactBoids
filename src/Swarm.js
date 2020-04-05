@@ -23,15 +23,14 @@ export default function Swarm({
   const [sdFactor, setSdFactor] = useState(5);
   const [isolationFactor, setIsolationFactor] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+
   const clearCanvas = useCallback(() => {
     if (boidsCtx) {
-      boidsCtx.beginPath();
-      boidsCtx.fillStyle = "red";
+      //boidsCtx.beginPath();
       boidsCtx.clearRect(0, 0, canvasWidth, canvasHeight);
-      boidsCtx.closePath();
+      //boidsCtx.closePath();
     }
   }, [canvasHeight, canvasWidth, boidsCtx]);
-  // const animFrameReq = useRef();
 
   const wrap = (val, min, max) => {
     if (val < min) {
@@ -159,14 +158,14 @@ export default function Swarm({
 
   const handleStep = useCallback(() => {
     // step forward one iteration
-    setStep(step + 1);
-    clearCanvas();
-    setBoids(
-      boids.map(boid => {
+    setStep(step => step + 1);
+    // clearCanvas();
+    setBoids(boids => {
+      return boids.map(boid => {
         return stepBoid(boid);
-      })
-    );
-  }, [boids, clearCanvas, step, stepBoid, setBoids]);
+      });
+    });
+  }, [stepBoid, setBoids]);
 
   const handleInfect = () => {
     const rndmIdx = Math.floor(Math.random() * boids.length);
@@ -201,11 +200,9 @@ export default function Swarm({
     const intervalId = setInterval(() => {
       handleStep();
     }, 40);
-    //requestAnimationFrame(handleStep);
     return () => {
       // teardown code here
       clearInterval(intervalId);
-      // cancelAnimationFrame(animFrameReq.current);
     };
   }, [handleStep]);
 
@@ -227,7 +224,7 @@ export default function Swarm({
 
   const handleAddBunch = () => {
     const bunch = 50;
-    const radius = 1;
+    const radius = 2;
     let newBoids = [];
     const isoFactor = isolationFactor / 100;
 
@@ -249,7 +246,7 @@ export default function Swarm({
   };
 
   const handleAddOne = () => {
-    const radius = 1;
+    const radius = 2;
     const isoFactor = isolationFactor / 100;
 
     setBoids([
@@ -268,6 +265,8 @@ export default function Swarm({
     ]);
     setBoidId(boidId + 1);
   };
+
+  clearCanvas();
 
   return (
     <div className="swarmControl">
@@ -306,7 +305,7 @@ export default function Swarm({
         <div className="sliderContainer">
           <div className="sliderLabel">
             <span>isolation: </span>
-            <span>{isolationFactor}</span>
+            <span>{isolationFactor}%</span>
           </div>
           <input
             onChange={e => {

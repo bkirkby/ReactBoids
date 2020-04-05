@@ -10,8 +10,8 @@ export default function App() {
   const [boidsNormalCtx, setBoidsNormalCtx] = useState();
   // const [boidsSDCtx, setBoidsSDCtx] = useState();
   // const [boidsIsolationCtx, setBoidsIsolationCtx] = useState();
-  const [canvasWidth] = useState(600);
-  const [canvasHeight] = useState(200);
+  const [canvasWidth] = useState(500);
+  const [canvasHeight] = useState(250);
   const [boidsNormal, setBoidsNormal] = useState([]);
   const [resetCbs, setResetCbs] = useState([]);
   // const [boidsSD, setBoidsSD] = useState([]);
