@@ -34,8 +34,8 @@ export const calcCohesionHeading = (boid, neighbors) => {
   return Math.atan2(avgPosition.y - boid.y, avgPosition.x - boid.x);
 };
 
-export const calcSeparationHeading = (boid, neighbors) => {
-  const separationRadius = 15; //0,10,20,30,40
+export const calcSeparationHeading = (boid, neighbors, separationRadius) => {
+  //const separationRadius = 15; //0,10,20,30,40
   if (!neighbors || neighbors.length <= 0) {
     return null;
   }

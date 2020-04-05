@@ -1,9 +1,22 @@
 import React, { useEffect, useState, useCallback } from "react";
 
-export default function GraphCanvas({ canvasWidth, canvasHeight, boids, id }) {
+export default function GraphCanvas({
+  canvasWidth,
+  canvasHeight,
+  boids,
+  id,
+  addResetListener
+}) {
   const [ctx, setCtx] = useState();
   const [boidGraph, setBoidGraph] = useState([]); // {numInfected:0, numNormal:0}
   const [lastGraphUpdate, setLastGraphUpdate] = useState(Date.now());
+
+  useEffect(() => {
+    addResetListener(() => {
+      //ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+      setBoidGraph([]);
+    });
+  }, [addResetListener]);
 
   useEffect(() => {
     // drawGraph
@@ -34,22 +47,22 @@ export default function GraphCanvas({ canvasWidth, canvasHeight, boids, id }) {
     }
   }, [ctx, boidGraph, canvasHeight, canvasWidth]);
 
-  const handleStepBoidGraph = e => {
-    e.preventDefault();
-    const numInfected = boids.filter(b => b.state === "infected").length;
-    const numTotal = boids.length;
-    if (numInfected < numTotal) {
-      setBoidGraph(boidGraph => {
-        return [
-          ...boidGraph,
-          {
-            numNormal: numTotal,
-            numInfected: numInfected
-          }
-        ];
-      });
-    }
-  };
+  // const handleStepBoidGraph = e => {
+  //   e.preventDefault();
+  //   const numInfected = boids.filter(b => b.state === "infected").length;
+  //   const numTotal = boids.length;
+  //   if (numInfected < numTotal) {
+  //     setBoidGraph(boidGraph => {
+  //       return [
+  //         ...boidGraph,
+  //         {
+  //           numNormal: numTotal,
+  //           numInfected: numInfected
+  //         }
+  //       ];
+  //     });
+  //   }
+  // };
 
   const shouldUpdateBoidGraph = useCallback(() => {
     const graphUpdateInterval = 60;
@@ -101,7 +114,7 @@ export default function GraphCanvas({ canvasWidth, canvasHeight, boids, id }) {
   return (
     <div className="graphContainer">
       <canvas id={id} width={canvasWidth} height={canvasHeight} />
-      <div>
+      {/*<div>
         <button onClick={handleStepBoidGraph}>step</button>
         <button
           onClick={() => {
@@ -110,7 +123,7 @@ export default function GraphCanvas({ canvasWidth, canvasHeight, boids, id }) {
         >
           reset
         </button>
-      </div>
+        </div>*/}
     </div>
   );
 }

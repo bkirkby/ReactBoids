@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import "./styles.css";
 
 import BirdCanvas from "./BirdCanvas";
@@ -10,9 +10,10 @@ export default function App() {
   const [boidsNormalCtx, setBoidsNormalCtx] = useState();
   // const [boidsSDCtx, setBoidsSDCtx] = useState();
   // const [boidsIsolationCtx, setBoidsIsolationCtx] = useState();
-  const [canvasWidth] = useState(300);
+  const [canvasWidth] = useState(600);
   const [canvasHeight] = useState(200);
   const [boidsNormal, setBoidsNormal] = useState([]);
+  const [resetCbs, setResetCbs] = useState([]);
   // const [boidsSD, setBoidsSD] = useState([]);
   // const [boidsIsolation, setBoidsIsolation] = useState([]);
 
@@ -34,6 +35,16 @@ export default function App() {
     return ret + num;
   };
 
+  const addResetListener = useCallback(rl => {
+    setResetCbs(rcb => [...rcb, rl]);
+  }, []);
+
+  const reset = () => {
+    resetCbs.forEach(f => {
+      f();
+    });
+  };
+
   return (
     <div className="app">
       <div className="normalContainer">
@@ -42,6 +53,7 @@ export default function App() {
           canvasWidth={canvasWidth}
           canvasHeight={50}
           id={"graphCanvas-normal"}
+          addResetListener={addResetListener}
         />
         <div className="counters" style={{ flexBasis: canvasWidth }}>
           <span className="normal">{zeroFill(boidsNormal.length)}</span>
@@ -61,70 +73,11 @@ export default function App() {
             canvasHeight={canvasHeight}
             boids={boidsNormal}
             setBoids={setBoidsNormal}
+            resetCallback={reset}
           />
         </div>
         <SimulationHistory />
       </div>
-      {/*<div className="sdContainer">
-        <h2>social distancing</h2>
-        <GraphCanvas
-          boids={boidsSD}
-          canvasWidth={canvasWidth}
-          canvasHeight={50}
-          id={"graphCanvas-sd"}
-        />
-        <div className="counters" style={{ flexBasis: canvasWidth }}>
-          <span className="normal">{zeroFill(boidsSD.length)}</span>
-          <span className="infected">
-            {zeroFill(boidsSD.filter(b => b.state === "infected").length)}
-          </span>
-        </div>
-        <div className="boidContainer">
-          <BirdCanvas
-            id="boidsCanvas-sd"
-            canvasWidth={canvasWidth}
-            canvasHeight={canvasHeight}
-          />
-          <Swarm
-            boidsCtx={boidsSDCtx}
-            canvasWidth={canvasWidth}
-            canvasHeight={canvasHeight}
-            boids={boidsSD}
-            setBoids={setBoidsSD}
-          />
-        </div>
-      </div>
-      <div className="isoContainer">
-        <h2>isolation</h2>
-        <GraphCanvas
-          boids={boidsIsolation}
-          canvasWidth={canvasWidth}
-          canvasHeight={50}
-          id={"graphCanvas-isolation"}
-        />
-        <div className="counters" style={{ flexBasis: canvasWidth }}>
-          <span className="normal">{zeroFill(boidsIsolation.length)}</span>
-          <span className="infected">
-            {zeroFill(
-              boidsIsolation.filter(b => b.state === "infected").length
-            )}
-          </span>
-        </div>
-        <div className="boidContainer">
-          <BirdCanvas
-            id="boidsCanvas-isolation"
-            canvasWidth={canvasWidth}
-            canvasHeight={canvasHeight}
-          />
-          <Swarm
-            boidsCtx={boidsIsolationCtx}
-            canvasWidth={canvasWidth}
-            canvasHeight={canvasHeight}
-            boids={boidsIsolation}
-            setBoids={setBoidsIsolation}
-          />
-            </div>
-      </div>*/}
     </div>
   );
 }

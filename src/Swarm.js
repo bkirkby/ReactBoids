@@ -14,11 +14,14 @@ export default function Swarm({
   canvasWidth,
   canvasHeight,
   boids,
-  setBoids
+  setBoids,
+  resetCallback
 }) {
   const [step, setStep] = useState(1);
   const [boidId, setBoidId] = useState(3);
   const [infectionRadius, setInfectionRadius] = useState(8);
+  const [sdFactor, setSdFactor] = useState(5);
+  const [isolationFactor, setIsolationFactor] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const clearCanvas = useCallback(() => {
     if (boidsCtx) {
@@ -74,7 +77,11 @@ export default function Swarm({
       if (neighbors && neighbors.length > 0) {
         const cohesionHeading = calcCohesionHeading(boid, neighbors);
         const alignmentHeading = calcAlignmentHeading(neighbors);
-        const separationHeading = calcSeparationHeading(boid, neighbors);
+        const separationHeading = calcSeparationHeading(
+          boid,
+          neighbors,
+          sdFactor
+        );
 
         // check infection
         const infectedCloseNeighbors = neighbors.filter(neighbor => {
@@ -140,7 +147,14 @@ export default function Swarm({
         state
       };
     },
-    [canvasHeight, canvasWidth, getNeighbors, infectionRadius, isPaused]
+    [
+      canvasHeight,
+      canvasWidth,
+      getNeighbors,
+      infectionRadius,
+      isPaused,
+      sdFactor
+    ]
   );
 
   const handleStep = useCallback(() => {
@@ -168,6 +182,19 @@ export default function Swarm({
       })
     );
   };
+
+  const getBoidSpeed = () => Math.floor(Math.random() * (6 - 2 + 1) + 4);
+
+  useEffect(() => {
+    // isolation
+    const factor = isolationFactor / 100;
+
+    setBoids(boids => {
+      return boids.map(b => {
+        return { ...b, speed: Math.random() < factor ? 0 : getBoidSpeed() };
+      });
+    });
+  }, [isolationFactor, setBoids]);
 
   useEffect(() => {
     // setup code here
@@ -202,6 +229,8 @@ export default function Swarm({
     const bunch = 50;
     const radius = 1;
     let newBoids = [];
+    const isoFactor = isolationFactor / 100;
+
     for (let i = 0; i < bunch; i++) {
       newBoids.push({
         id: boidId + i,
@@ -209,7 +238,7 @@ export default function Swarm({
         y: Math.random() * canvasHeight,
         radius: radius,
         heading: Math.random() * 2 * Math.PI - Math.PI,
-        speed: Math.floor(Math.random() * (6 - 2 + 1) + 4),
+        speed: Math.random() < isoFactor ? 0 : getBoidSpeed(),
         vision: 35,
         radialSpeed: Math.PI / 21,
         state: "normal"
@@ -221,6 +250,8 @@ export default function Swarm({
 
   const handleAddOne = () => {
     const radius = 1;
+    const isoFactor = isolationFactor / 100;
+
     setBoids([
       ...boids,
       {
@@ -229,7 +260,7 @@ export default function Swarm({
         y: Math.random() * canvasHeight,
         radius: radius,
         heading: Math.random() * 2 * Math.PI - Math.PI,
-        speed: Math.floor(Math.random() * (6 - 2 + 1) + 3),
+        speed: Math.random() < isoFactor ? 0 : getBoidSpeed(),
         vision: 35,
         radialSpeed: Math.PI / 15,
         state: "normal" // normal, infected, immune
@@ -239,7 +270,7 @@ export default function Swarm({
   };
 
   return (
-    <>
+    <div className="swarmControl">
       {boids.map(boid => (
         <Boid
           key={boid.id}
@@ -253,17 +284,62 @@ export default function Swarm({
           //vision={boid.vision}
         />
       ))}
-      <div>
+      <div className="swarmSliders">
+        <div className="sliderContainer">
+          <div className="sliderLabel">
+            <span>social distancing:</span>
+            <span>{sdFactor}</span>
+          </div>
+          <input
+            onChange={e => {
+              e.preventDefault();
+              setSdFactor(Number(e.target.value));
+            }}
+            id="sdSlider"
+            type="range"
+            min="0"
+            max="40"
+            step="5"
+            value={sdFactor}
+          />
+        </div>
+        <div className="sliderContainer">
+          <div className="sliderLabel">
+            <span>isolation: </span>
+            <span>{isolationFactor}</span>
+          </div>
+          <input
+            onChange={e => {
+              e.preventDefault();
+              setIsolationFactor(Number(e.target.value));
+            }}
+            id="isolationSlider"
+            type="range"
+            min="0"
+            max="100"
+            step="1"
+            value={isolationFactor}
+          />
+        </div>
+      </div>
+      <div className="swarmButtonsContainer">
         <button onClick={handleRandomClick}>random</button>
         <button onClick={handleAddOne}>add one</button>
         <button onClick={handleAddBunch}>add bunch</button>
         <button onClick={handleStep}>step</button>
         <button onClick={handleInfect}>infect</button>
-        <button onClick={() => setBoids([])}>reset</button>
+        <button
+          onClick={e => {
+            resetCallback();
+            setBoids([]);
+          }}
+        >
+          reset
+        </button>
         <button onClick={() => setIsPaused(!isPaused)}>
           {isPaused ? "resume" : "pause"}
         </button>
       </div>
-    </>
+    </div>
   );
 }
