@@ -56,7 +56,9 @@ export default function App() {
           addResetListener={addResetListener}
         />
         <div className="counters">
-          <span className="normal">{zeroFill(boidsNormal.length)}</span>
+          <span className="normal">
+            {zeroFill(boidsNormal.filter(b => b.state === "normal").length)}
+          </span>
           <span className="infected">
             {zeroFill(boidsNormal.filter(b => b.state === "infected").length)}
           </span>

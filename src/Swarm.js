@@ -182,10 +182,12 @@ export default function Swarm({
   }, [stepBoid, setBoids]);
 
   const handleInfect = () => {
-    const rndmIdx = Math.floor(Math.random() * boids.length);
+    const mobileBoids = boids.filter(b => b.speed > 0);
+    const rndmIdx = Math.floor(Math.random() * mobileBoids.length);
+    const boidToInfect = mobileBoids[rndmIdx];
     setBoids(
-      boids.map((boid, i) => {
-        if (i === rndmIdx) {
+      boids.map(boid => {
+        if (boidToInfect && boid.id === boidToInfect.id) {
           return {
             ...boid,
             state: "infected"
@@ -206,6 +208,29 @@ export default function Swarm({
       });
     });
   }, [isolationFactor, setBoids]);
+
+  const handleAddBunch = () => {
+    const bunch = 50;
+    const radius = 2;
+    let newBoids = [];
+    const isoFactor = isolationFactor / 100;
+
+    for (let i = 0; i < bunch; i++) {
+      newBoids.push({
+        id: boidId + i,
+        x: canvasWidth / 2, //Math.random() * canvasWidth,
+        y: canvasHeight / 2, //Math.random() * canvasHeight,
+        radius: radius,
+        heading: Math.random() * 2 * Math.PI - Math.PI,
+        speed: Math.random() < isoFactor ? 0 : getBoidSpeed(),
+        vision: 35,
+        radialSpeed: Math.PI / 21,
+        state: "normal"
+      });
+    }
+    setBoids(boids => boids.concat(newBoids));
+    setBoidId(boidId => boidId + bunch);
+  };
 
   useEffect(() => {
     // setup code here
@@ -232,29 +257,6 @@ export default function Swarm({
         };
       })
     );
-  };
-
-  const handleAddBunch = () => {
-    const bunch = 50;
-    const radius = 2;
-    let newBoids = [];
-    const isoFactor = isolationFactor / 100;
-
-    for (let i = 0; i < bunch; i++) {
-      newBoids.push({
-        id: boidId + i,
-        x: Math.random() * canvasWidth,
-        y: Math.random() * canvasHeight,
-        radius: radius,
-        heading: Math.random() * 2 * Math.PI - Math.PI,
-        speed: Math.random() < isoFactor ? 0 : getBoidSpeed(),
-        vision: 35,
-        radialSpeed: Math.PI / 21,
-        state: "normal"
-      });
-    }
-    setBoids(boids.concat(newBoids));
-    setBoidId(boidId + bunch);
   };
 
   const handleAddOne = () => {
@@ -310,7 +312,7 @@ export default function Swarm({
             type="range"
             min="0"
             max="40"
-            step="5"
+            step="1"
             value={sdFactor}
           />
         </div>

@@ -40,7 +40,7 @@ export default function GraphCanvas({
 
         // normal
         ctx.beginPath();
-        ctx.fillStyle = "black";
+        ctx.fillStyle = "#0033ff";
         ctx.fillRect(i * lineWidth, 0, lineWidth, normalHeight);
         ctx.closePath();
       });

@@ -26,15 +26,15 @@ export default function SimulationHistory(props) {
 
   return (
     <div className="simulationHistoryContainer">
-      {history.map(h => {
+      {history.map((h, i) => {
         return (
-          <svg width={svgWidth} height={svgHeight}>
+          <svg id={`histsvg-${i}`} width={svgWidth} height={svgHeight}>
             <rect
               x="0"
               y="0"
               width={svgWidth}
               height={svgHeight}
-              style={{ fill: "black" }}
+              style={{ fill: "0033ff" }}
             />
             {h.lines.map((line, i) => {
               const lineHeight = svgHeight * line;

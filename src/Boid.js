@@ -11,7 +11,7 @@ export default function Boid({
   state
 }) {
   const stateColors = {
-    normal: "white",
+    normal: "#0033ff",
     infected: "#ffcc00",
     immune: "pink"
   };
@@ -26,7 +26,7 @@ export default function Boid({
       ctx.globalAlpha = 0.71;
       ctx.fillStyle = stateColors[state];
       ctx.strokeStyle = stateColors[state];
-      ctx.lineWidth = 1;
+      ctx.lineWidth = 2;
 
       ctx.beginPath();
       //circle and nose line

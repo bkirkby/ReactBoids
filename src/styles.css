@@ -4,7 +4,7 @@
 }
 
 html {
-  background-color: #101065;
+  background-color: #070745;
 }
 
 button {
@@ -29,8 +29,9 @@ h2 {
 }
 
 .counters {
-  border: 2px solid black;
-  background-color: #454545;
+  border-top: 2px solid black;
+  border-bottom: 2px solid #454545;
+  background-color: black;
   justify-content: space-between;
   align-content: center;
 }
@@ -71,7 +72,7 @@ span.infected {
 }
 
 span.normal {
-  color: white;
+  color: #0033ff;
 }
 
 svg {
