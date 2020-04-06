@@ -12,6 +12,8 @@ export default function App() {
   // const [boidsIsolationCtx, setBoidsIsolationCtx] = useState();
   const [canvasWidth] = useState(400);
   const [canvasHeight] = useState(350);
+  const [graphWidth] = useState(400);
+  const [graphHeight] = useState(50);
   const [boidsNormal, setBoidsNormal] = useState([]);
   const [resetCbs, setResetCbs] = useState([]);
   // const [boidsSD, setBoidsSD] = useState([]);
@@ -50,8 +52,8 @@ export default function App() {
       <div className="normalContainer">
         <GraphCanvas
           boids={boidsNormal}
-          canvasWidth={canvasWidth}
-          canvasHeight={50}
+          canvasWidth={graphWidth}
+          canvasHeight={graphHeight}
           id={"graphCanvas-normal"}
           addResetListener={addResetListener}
         />
@@ -78,7 +80,7 @@ export default function App() {
             resetCallback={reset}
           />
         </div>
-        <SimulationHistory />
+        <SimulationHistory svgWidth={graphWidth} svgHeight={graphHeight} />
       </div>
     </div>
   );

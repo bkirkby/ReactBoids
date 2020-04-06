@@ -10,11 +10,22 @@ export default function GraphCanvas({
   const [ctx, setCtx] = useState();
   const [boidGraph, setBoidGraph] = useState([]); // {numInfected:0, numNormal:0}
   const [lastGraphUpdate, setLastGraphUpdate] = useState(Date.now());
+  const [isGraphDone, setIsGraphDone] = useState(false);
+
+  useEffect(() => {
+    // notify that graph is done
+    if (isGraphDone) {
+      const histGraph = boidGraph.map(bg => {
+        return bg.numInfected / bg.numNormal;
+      });
+      console.log("bk: GraphCanvas.js: GraphCanvas: histGraph: ", histGraph);
+    }
+  }, [isGraphDone, boidGraph]);
 
   useEffect(() => {
     addResetListener(() => {
-      //ctx.clearRect(0, 0, canvasWidth, canvasHeight);
       setBoidGraph([]);
+      setIsGraphDone(false);
     });
   }, [addResetListener]);
 
@@ -82,6 +93,8 @@ export default function GraphCanvas({
     const numInfected = boids.filter(b => b.state === "infected").length;
     if (shouldUpdateBoidGraph()) {
       if (boids.length && numInfected === boids.length) {
+        // all are infected, so see if we need to include the final
+        // boidGraph
         setBoidGraph(boidGraph => {
           const lastNumNormal = boidGraph.length
             ? boidGraph[boidGraph.length - 1].numNormal
@@ -95,21 +108,28 @@ export default function GraphCanvas({
               { numNormal: boids.length, numInfected: boids.length }
             ];
           }
+          setIsGraphDone(true);
           return boidGraph;
         });
       } else if (boids.length && numInfected < boids.length && numInfected) {
+        // some are infected and not all are infected
         setBoidGraph(boidGraph => {
-          return [
-            ...boidGraph,
-            {
-              numNormal: boids.length,
-              numInfected: boids.filter(b => b.state === "infected").length
-            }
-          ];
+          // only add to boidGraph if we have canvas space to show it
+          if (boidGraph.length < canvasWidth) {
+            return [
+              ...boidGraph,
+              {
+                numNormal: boids.length,
+                numInfected: boids.filter(b => b.state === "infected").length
+              }
+            ];
+          }
+          setIsGraphDone(true);
+          return boidGraph;
         });
       }
     }
-  }, [boids, shouldUpdateBoidGraph]);
+  }, [boids, shouldUpdateBoidGraph, canvasWidth]);
 
   return (
     <div className="graphContainer">

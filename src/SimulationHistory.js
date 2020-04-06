@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 
-export default function SimulationHistory(props) {
-  const svgHeight = 25;
-  const svgWidth = 50;
+export default function SimulationHistory({ svgHeight, svgWidth }) {
   const [history, setHistory] = useState([
     {
       vars: { distancing: 10, isolation: 10 },

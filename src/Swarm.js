@@ -211,15 +211,15 @@ export default function Swarm({
 
   const handleAddBunch = () => {
     const bunch = 50;
-    const radius = 2;
+    const radius = 3;
     let newBoids = [];
     const isoFactor = isolationFactor / 100;
 
     for (let i = 0; i < bunch; i++) {
       newBoids.push({
         id: boidId + i,
-        x: canvasWidth / 2, //Math.random() * canvasWidth,
-        y: canvasHeight / 2, //Math.random() * canvasHeight,
+        x: Math.random() * canvasWidth,
+        y: Math.random() * canvasHeight,
         radius: radius,
         heading: Math.random() * 2 * Math.PI - Math.PI,
         speed: Math.random() < isoFactor ? 0 : getBoidSpeed(),
@@ -260,7 +260,7 @@ export default function Swarm({
   };
 
   const handleAddOne = () => {
-    const radius = 2;
+    const radius = 3;
     const isoFactor = isolationFactor / 100;
 
     setBoids([
@@ -301,7 +301,7 @@ export default function Swarm({
         <div className="sliderContainer">
           <div className="sliderLabel">
             <span>social distancing:</span>
-            <span>{sdFactor}</span>
+            <span>{(sdFactor / 5).toFixed(1)}δ</span>
           </div>
           <input
             onChange={e => {

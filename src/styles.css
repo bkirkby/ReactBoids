@@ -54,7 +54,7 @@ h2 {
 
 .simulationHistoryContainer {
   display: flex;
-  flex-flow: row wrap;
+  flex-flow: column wrap;
   padding: 1px;
 }
 
