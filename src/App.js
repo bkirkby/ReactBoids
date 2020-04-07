@@ -62,19 +62,9 @@ export default function App() {
           ...simHistory,
           [hash]: {
             ...simHistoryForVars,
-            history: [...simHistoryForVars.history, graphData]
+            history: [].concat([graphData], simHistoryForVars.history)
           }
         };
-        // Object.keys(simHistory).map(varHistKey => {
-        //   const varHist = simHistory[varHistKey];
-        //   if (varHistKey === hash) {
-        //     return {
-        //       ...varHist,
-        //       history: [varHist.history, graphData]
-        //     };
-        //   }
-        //   return varHist;
-        // });
       });
     },
     [setSimHistory]

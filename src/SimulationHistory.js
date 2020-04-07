@@ -16,10 +16,10 @@ export default function SimulationHistory({ svgHeight, svgWidth, history }) {
 
   return (
     <div className="simulationHistoryContainer">
-      {Object.keys(history).map(key => {
-        return history[key].history.map((h, i) => {
+      {Object.keys(history).map(hashKey => {
+        return history[hashKey].history.map((graphData, i) => {
           return (
-            <svg id={`histsvg-${i}`} width={svgWidth} height={svgHeight}>
+            <svg key={`histsvg-${i}`} width={svgWidth} height={svgHeight}>
               <rect
                 x="0"
                 y="0"
@@ -27,11 +27,12 @@ export default function SimulationHistory({ svgHeight, svgWidth, history }) {
                 height={svgHeight}
                 style={{ fill: "0033ff" }}
               />
-              {h.map((line, i) => {
-                const lineHeight = svgHeight * line;
+              {graphData.map((h, j) => {
+                const lineHeight = svgHeight * h;
                 return (
                   <rect
-                    x={i}
+                    key={`histsvg-${i}-${j}`}
+                    x={j}
                     y={svgHeight - lineHeight}
                     width="1"
                     height={lineHeight}
