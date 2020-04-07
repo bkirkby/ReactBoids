@@ -1,10 +1,13 @@
 import React, { useEffect, useState, useCallback } from "react";
 import "./styles.css";
+import sha1 from "sha1";
 
 import BirdCanvas from "./BirdCanvas";
 import GraphCanvas from "./GraphCanvas";
 import Swarm from "./Swarm";
 import SimulationHistory from "./SimulationHistory";
+import createPersistedState from "use-persisted-state";
+const useSimHistory = createPersistedState("sim-history");
 
 export default function App() {
   const [boidsNormalCtx, setBoidsNormalCtx] = useState();
@@ -16,7 +19,7 @@ export default function App() {
   const [graphHeight] = useState(50);
   const [boidsNormal, setBoidsNormal] = useState([]);
   const [resetCbs, setResetCbs] = useState([]);
-  const [simHistory, setSimHistory] = useState([]);
+  const [simHistory, setSimHistory] = useSimHistory({});
 
   useEffect(() => {
     const canvasNormal = document.getElementById("boidsCanvas-normal");
@@ -46,16 +49,36 @@ export default function App() {
     });
   };
 
-  const addSimHistory = useCallback(graphData => {
-    setSimHistory(simHistory =>
-      [
-        {
-          vars: { sd: 0, iso: 0, pop: 0 },
-          lines: [...graphData]
-        }
-      ].concat(simHistory)
-    );
-  }, []);
+  const addSimHistory = useCallback(
+    graphData => {
+      // construct obj
+      const varObj = { sd: 0, iso: 0, pop: 50 };
+      const hash = sha1(JSON.stringify(varObj));
+      setSimHistory(simHistory => {
+        const simHistoryForVars = simHistory[hash]
+          ? simHistory[hash]
+          : { vars: {}, history: [] };
+        return {
+          ...simHistory,
+          [hash]: {
+            ...simHistoryForVars,
+            history: [...simHistoryForVars.history, graphData]
+          }
+        };
+        // Object.keys(simHistory).map(varHistKey => {
+        //   const varHist = simHistory[varHistKey];
+        //   if (varHistKey === hash) {
+        //     return {
+        //       ...varHist,
+        //       history: [varHist.history, graphData]
+        //     };
+        //   }
+        //   return varHist;
+        // });
+      });
+    },
+    [setSimHistory]
+  );
 
   return (
     <div className="app">
