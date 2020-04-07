@@ -260,7 +260,7 @@ export default function Swarm({
   };
 
   const handleAddOne = () => {
-    const radius = 3;
+    const radius = 1;
     const isoFactor = isolationFactor / 100;
 
     setBoids([
@@ -273,7 +273,7 @@ export default function Swarm({
         heading: Math.random() * 2 * Math.PI - Math.PI,
         speed: Math.random() < isoFactor ? 0 : getBoidSpeed(),
         vision: 35,
-        radialSpeed: Math.PI / 15,
+        radialSpeed: Math.PI / 16,
         state: "normal" // normal, infected, immune
       }
     ]);
@@ -301,7 +301,7 @@ export default function Swarm({
         <div className="sliderContainer">
           <div className="sliderLabel">
             <span>social distancing:</span>
-            <span>{(sdFactor / 5).toFixed(1)}δ</span>
+            <span>{(sdFactor / 5).toFixed(1)} δ</span>
           </div>
           <input
             onChange={e => {

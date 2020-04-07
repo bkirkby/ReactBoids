@@ -1,16 +1,16 @@
 import React, { useState } from "react";
 
-export default function SimulationHistory({ svgHeight, svgWidth }) {
-  const [history, setHistory] = useState([
-    {
+export default function SimulationHistory({ svgHeight, svgWidth, history }) {
+  //const [history, setHistory] = useState([
+  /*{
       vars: { distancing: 10, isolation: 10 },
       lines: [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8]
     },
     {
-      vars: { distancing: 10, isolation: 10 },
+      vars: { distancing: 10, isolation: 10, population: 50 },
       lines: [0.25, 0.28, 0.35, 0.48, 0.533, 0.545, 0.7, 0.8]
-    }
-  ]);
+    }*/
+  //]);
   /*
     {
       vars: {distancing: 10, isolation: 10},

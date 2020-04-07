@@ -16,8 +16,7 @@ export default function App() {
   const [graphHeight] = useState(50);
   const [boidsNormal, setBoidsNormal] = useState([]);
   const [resetCbs, setResetCbs] = useState([]);
-  // const [boidsSD, setBoidsSD] = useState([]);
-  // const [boidsIsolation, setBoidsIsolation] = useState([]);
+  const [simHistory, setSimHistory] = useState([]);
 
   useEffect(() => {
     const canvasNormal = document.getElementById("boidsCanvas-normal");
@@ -47,6 +46,17 @@ export default function App() {
     });
   };
 
+  const addSimHistory = useCallback(graphData => {
+    setSimHistory(simHistory =>
+      [
+        {
+          vars: { sd: 0, iso: 0, pop: 0 },
+          lines: [...graphData]
+        }
+      ].concat(simHistory)
+    );
+  }, []);
+
   return (
     <div className="app">
       <div className="normalContainer">
@@ -56,6 +66,7 @@ export default function App() {
           canvasHeight={graphHeight}
           id={"graphCanvas-normal"}
           addResetListener={addResetListener}
+          addSimHistory={addSimHistory}
         />
         <div className="counters">
           <span className="normal">
@@ -80,7 +91,11 @@ export default function App() {
             resetCallback={reset}
           />
         </div>
-        <SimulationHistory svgWidth={graphWidth} svgHeight={graphHeight} />
+        <SimulationHistory
+          history={simHistory}
+          svgWidth={graphWidth}
+          svgHeight={graphHeight}
+        />
       </div>
     </div>
   );
