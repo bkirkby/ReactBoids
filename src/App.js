@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback, useReducer } from "react";
 import sha1 from "sha1";
+import createPersistedState from "use-persisted-state";
 
 import "./styles.css";
 
@@ -10,7 +11,8 @@ import SimulationHistory from "./SimulationHistory";
 import SimpleMenu from "./SimpleMenu";
 import SwarmControl from "./SwarmControl";
 
-import createPersistedState from "use-persisted-state";
+import { createBunch } from "./boidsUtils";
+
 const useSimHistory = createPersistedState("sim-history");
 
 export default function App() {
@@ -28,6 +30,7 @@ export default function App() {
   const [sdFactor, setSdFactor] = useState(0);
   //const [simHistory, setSimHistory] = useSimHistory({});
   const [simHistory, setSimHistory] = useState({});
+  const [isPaused, setIsPaused] = useState(false);
 
   useEffect(() => {
     const canvasNormal = document.getElementById("boidsCanvas-normal");
@@ -36,7 +39,8 @@ export default function App() {
     // setBoidsSDCtx(canvasSD.getContext("2d"));
     // const canvasIsolation = document.getElementById("boidsCanvas-isolation");
     // setBoidsIsolationCtx(canvasIsolation.getContext("2d"));
-  }, []);
+    setBoidsNormal(createBunch(50, 0, canvasWidth, canvasHeight));
+  }, [canvasWidth, canvasHeight]);
 
   const zeroFill = num => {
     let ret = "";
@@ -84,6 +88,18 @@ export default function App() {
     }
   }, []);
 
+  const shouldShowSimpleMenu = () => {
+    return simState === "done";
+  };
+
+  const toggleSimpleMenu = () => {
+    if (shouldShowSimpleMenu()) {
+      setSimState("freestyle");
+    } else {
+      setSimState("done");
+    }
+  };
+
   return (
     <div className="app">
       <div className="normalContainer">
@@ -96,12 +112,25 @@ export default function App() {
           addSimHistory={addSimHistory}
           notifySimDone={notifySimDone}
         />
-        <div className="counters">
-          <span className="normal">
-            {zeroFill(boidsNormal.filter(b => b.state === "normal").length)}
+        <div className="countersContainer">
+          <span>
+            <span className="normalText">
+              {zeroFill(boidsNormal.filter(b => b.state === "normal").length)}
+            </span>
+            <span className="infectedText">
+              {zeroFill(boidsNormal.filter(b => b.state === "infected").length)}
+            </span>
           </span>
-          <span className="infected">
-            {zeroFill(boidsNormal.filter(b => b.state === "infected").length)}
+          <span>
+            <button
+              id="menuButton"
+              style={{
+                borderStyle: shouldShowSimpleMenu() ? "inset" : "outset"
+              }}
+              onClick={() => toggleSimpleMenu()}
+            >
+              ...
+            </button>
           </span>
         </div>
         <div className="boidContainer">
@@ -109,11 +138,9 @@ export default function App() {
             id="boidsCanvas-normal"
             canvasWidth={canvasWidth}
             canvasHeight={canvasHeight}
-            opacity={
-              simState === "running" || simState === "freestyle" ? 1 : 0.2
-            }
+            opacity={shouldShowSimpleMenu() ? 0.2 : 1}
           />
-          {simState === "done" && (
+          {shouldShowSimpleMenu() && (
             <SimpleMenu
               setBoids={setBoidsNormal}
               setSimState={setSimState}
@@ -133,12 +160,22 @@ export default function App() {
             resetCallback={reset}
             isolationFactor={isolationFactor}
             sdFactor={sdFactor}
+            isPaused={isPaused}
           />
+
           <SwarmControl
             isolationFactor={isolationFactor}
             sdFactor={sdFactor}
             setIsolationFactor={setIsolationFactor}
             setSdFactor={setSdFactor}
+            isPaused={isPaused}
+            setIsPaused={setIsPaused}
+            simState={simState}
+            setBoids={setBoidsNormal}
+            boids={boidsNormal}
+            canvasWidth={canvasWidth}
+            canvasHeight={canvasHeight}
+            reset={reset}
           />
         </div>
         {/*<SimulationHistory

@@ -28,7 +28,9 @@ h2 {
   justify-content: center;
 }
 
-.counters {
+.countersContainer {
+  display: flex;
+  flex-direction: row;
   border-top: 2px solid black;
   border-bottom: 2px solid #454545;
   background-color: black;
@@ -67,11 +69,11 @@ span {
   padding: 5px;
 }
 
-span.infected {
+span.infectedText {
   color: #ffcc00;
 }
 
-span.normal {
+span.normalText {
   color: #0033ff;
 }
 
@@ -118,4 +120,8 @@ div.simpleMenu {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
+}
+
+#menuButton {
+  font-size: xx-small;
 }
