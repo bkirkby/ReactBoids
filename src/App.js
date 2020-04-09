@@ -8,6 +8,7 @@ import GraphCanvas from "./GraphCanvas";
 import Swarm from "./Swarm";
 import SimulationHistory from "./SimulationHistory";
 import SimpleMenu from "./SimpleMenu";
+import SwarmControl from "./SwarmControl";
 
 import createPersistedState from "use-persisted-state";
 const useSimHistory = createPersistedState("sim-history");
@@ -24,6 +25,7 @@ export default function App() {
   const [resetCbs, setResetCbs] = useState([]);
   const [simState, setSimState] = useState("done"); // freestyle, running, done
   const [isolationFactor, setIsolationFactor] = useState(0);
+  const [sdFactor, setSdFactor] = useState(0);
   //const [simHistory, setSimHistory] = useSimHistory({});
   const [simHistory, setSimHistory] = useState({});
 
@@ -114,7 +116,8 @@ export default function App() {
               setSimState={setSimState}
               canvasWidth={canvasWidth}
               canvasHeight={canvasHeight}
-              isolationFactor={isolationFactor}
+              setIsolationFactor={setIsolationFactor}
+              setSdFactor={setSdFactor}
               reset={reset}
             />
           )}
@@ -126,7 +129,13 @@ export default function App() {
             setBoids={setBoidsNormal}
             resetCallback={reset}
             isolationFactor={isolationFactor}
+            sdFactor={sdFactor}
+          />
+          <SwarmControl
+            isolationFactor={isolationFactor}
+            sdFactor={sdFactor}
             setIsolationFactor={setIsolationFactor}
+            setSdFactor={setSdFactor}
           />
         </div>
         {/*<SimulationHistory

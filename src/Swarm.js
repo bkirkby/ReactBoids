@@ -21,20 +21,16 @@ export default function Swarm({
   setBoids,
   resetCallback,
   isolationFactor,
-  setIsolationFactor
+  sdFactor
 }) {
   const [step, setStep] = useState(1);
-  //const [boidId, setBoidId] = useState(6);
   const [infectionRadius, setInfectionRadius] = useState(3);
-  const [sdFactor, setSdFactor] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [devMode, setDevMode] = useState(true);
 
   const clearCanvas = useCallback(() => {
     if (boidsCtx) {
-      //boidsCtx.beginPath();
       boidsCtx.clearRect(0, 0, canvasWidth, canvasHeight);
-      //boidsCtx.closePath();
     }
   }, [canvasHeight, canvasWidth, boidsCtx]);
 
@@ -199,16 +195,15 @@ export default function Swarm({
     setBoids(infectBoid(boids));
   };
 
-  useEffect(() => {
-    // isolation
-    const factor = isolationFactor / 100;
+  // useEffect(() => {
+  //   const factor = isolationFactor / 100;
 
-    setBoids(boids => {
-      return boids.map(b => {
-        return { ...b, speed: Math.random() < factor ? 0 : getBoidSpeed() };
-      });
-    });
-  }, [isolationFactor, setBoids]);
+  //   setBoids(boids => {
+  //     return boids.map(b => {
+  //       return { ...b, speed: Math.random() < factor ? 0 : getBoidSpeed() };
+  //     });
+  //   });
+  // }, [isolationFactor, setBoids]);
 
   const handleAddBunch = () => {
     const newBoids = createBunch(
@@ -218,7 +213,6 @@ export default function Swarm({
       canvasHeight
     );
     setBoids(boids => boids.concat(newBoids));
-    // setBoidId(boidId => boidId + newBoids.length);
   };
 
   useEffect(() => {
@@ -266,7 +260,6 @@ export default function Swarm({
         state: "normal" // normal, infected, immune
       }
     ]);
-    // setBoidId(boidId + 1);
   };
 
   clearCanvas();
@@ -286,44 +279,6 @@ export default function Swarm({
           //vision={boid.vision}
         />
       ))}
-      <div className="swarmSliders">
-        <div className="sliderContainer">
-          <div className="sliderLabel">
-            <span>social distancing:</span>
-            <span>{(sdFactor / 5).toFixed(1)} δ</span>
-          </div>
-          <input
-            onChange={e => {
-              e.preventDefault();
-              setSdFactor(Number(e.target.value));
-            }}
-            id="sdSlider"
-            type="range"
-            min="0"
-            max="40"
-            step="1"
-            value={sdFactor}
-          />
-        </div>
-        <div className="sliderContainer">
-          <div className="sliderLabel">
-            <span>isolation: </span>
-            <span>{isolationFactor}%</span>
-          </div>
-          <input
-            onChange={e => {
-              e.preventDefault();
-              setIsolationFactor(Number(e.target.value));
-            }}
-            id="isolationSlider"
-            type="range"
-            min="0"
-            max="100"
-            step="1"
-            value={isolationFactor}
-          />
-        </div>
-      </div>
       {devMode && (
         <div className="swarmButtonsContainer">
           <button onClick={handleRandomClick}>random</button>
