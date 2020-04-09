@@ -14,6 +14,19 @@ const About = ({ setShowAbout }) => {
       </div>
       <div className="spacer" />
       <div>only a test</div>
+      <div className="spacer" />
+      {/*<button>support this app</button>*/}
+      <div>
+        <a
+          class="bmc-button"
+          target="_blank"
+          rel="noopener noreferrer"
+          href="https://www.buymeacoffee.com/briankirkby"
+        >
+          support me
+        </a>
+      </div>
+      <div className="spacer" />
     </div>
   );
 };

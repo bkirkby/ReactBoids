@@ -147,6 +147,7 @@ div.about {
   padding: 5px;
   z-index: 1;
   width: 90%;
+  max-width: 600px;
 }
 
 div.about > div {
@@ -155,4 +156,8 @@ div.about > div {
 
 div.spacer {
   padding-top: 15px;
+}
+
+a {
+  color: #ffcc00;
 }

@@ -23,7 +23,7 @@ export default function Boid({
       const noseY = y + Math.sin(heading) * radius * 2.5;
       // body and nose
       ctx.setLineDash([]);
-      ctx.globalAlpha = 0.71;
+      ctx.globalAlpha = 1;
       ctx.fillStyle = stateColors[state];
       ctx.strokeStyle = stateColors[state];
       ctx.lineWidth = 2;
