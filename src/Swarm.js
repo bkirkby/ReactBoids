@@ -281,11 +281,13 @@ export default function Swarm({
       ))}
       {devMode && (
         <div className="swarmButtonsContainer">
-          <button onClick={handleRandomClick}>random</button>
-          <button onClick={handleAddOne}>add one</button>
           <button onClick={handleAddBunch}>add bunch</button>
-          <button onClick={handleStep}>step</button>
+          <button onClick={handleAddOne}>add one</button>
+          <button onClick={handleRandomClick}>random</button>
           <button onClick={handleInfect}>infect</button>
+          <button onClick={() => setIsPaused(!isPaused)}>
+            {isPaused ? "resume" : "pause"}
+          </button>
           <button
             onClick={e => {
               resetCallback();
@@ -293,9 +295,6 @@ export default function Swarm({
             }}
           >
             reset
-          </button>
-          <button onClick={() => setIsPaused(!isPaused)}>
-            {isPaused ? "resume" : "pause"}
           </button>
         </div>
       )}

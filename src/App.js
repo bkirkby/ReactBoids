@@ -109,6 +109,9 @@ export default function App() {
             id="boidsCanvas-normal"
             canvasWidth={canvasWidth}
             canvasHeight={canvasHeight}
+            opacity={
+              simState === "running" || simState === "freestyle" ? 1 : 0.2
+            }
           />
           {simState === "done" && (
             <SimpleMenu

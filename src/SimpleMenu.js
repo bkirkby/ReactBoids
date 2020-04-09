@@ -72,7 +72,7 @@ const SimpleMenu = ({
         isolation constrained
       </button>
       <button onClick={handleBothConstrained}>both constrained</button>
-      <button>freestyle mode</button>
+      <button onClick={() => setSimState("freestyle")}>freestyle mode</button>
     </div>
   );
 };
