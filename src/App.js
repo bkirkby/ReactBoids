@@ -10,6 +10,7 @@ import Swarm from "./Swarm";
 import SimulationHistory from "./SimulationHistory";
 import SimpleMenu from "./SimpleMenu";
 import SwarmControl from "./SwarmControl";
+import About from "./About";
 
 import { createBunch } from "./boidsUtils";
 
@@ -31,6 +32,7 @@ export default function App() {
   //const [simHistory, setSimHistory] = useSimHistory({});
   const [simHistory, setSimHistory] = useState({});
   const [isPaused, setIsPaused] = useState(false);
+  const [showAbout, setShowAbout] = useState(false);
 
   useEffect(() => {
     const canvasNormal = document.getElementById("boidsCanvas-normal");
@@ -102,7 +104,8 @@ export default function App() {
 
   return (
     <div className="app">
-      <div className="normalContainer">
+      {showAbout && <About setShowAbout={setShowAbout} />}
+      <div className="normalContainer" style={{ opacity: showAbout ? 0.2 : 1 }}>
         <GraphCanvas
           boids={boidsNormal}
           canvasWidth={graphWidth}
@@ -149,6 +152,7 @@ export default function App() {
               setIsolationFactor={setIsolationFactor}
               setSdFactor={setSdFactor}
               reset={reset}
+              setShowAbout={setShowAbout}
             />
           )}
           <Swarm

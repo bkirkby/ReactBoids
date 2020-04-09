@@ -9,7 +9,8 @@ const SimpleMenu = ({
   canvasHeight,
   setBoids,
   setSimState,
-  reset
+  reset,
+  setShowAbout
 }) => {
   const handleUnconstrained = () => {
     reset();
@@ -75,7 +76,7 @@ const SimpleMenu = ({
           fontSize: "larger"
         }}
       >
-        COVID SIMULATOR β
+        INFECTION SIMULATOR 0.1β
       </span>
       <button onClick={handleUnconstrained}>unconstrained</button>
       <button onClick={handleSdConstrained}>social distance constrained</button>
@@ -84,6 +85,7 @@ const SimpleMenu = ({
       </button>
       <button onClick={handleBothConstrained}>both constrained</button>
       <button onClick={() => setSimState("freestyle")}>freestyle mode</button>
+      <button onClick={() => setShowAbout(true)}>about</button>
     </div>
   );
 };
