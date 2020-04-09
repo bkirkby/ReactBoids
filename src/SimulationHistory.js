@@ -1,6 +1,10 @@
 import React from "react";
 
-export default function SimulationHistory({ svgHeight, svgWidth, history }) {
+export default function SimulationHistory({
+  svgHeight,
+  svgWidth,
+  history = {}
+}) {
   //const [history, setHistory] = useState([
   /*{
       f23a0a93d577f575e46a32d3eae42795ada9d1d9: {

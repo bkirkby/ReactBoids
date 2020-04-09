@@ -1,11 +1,14 @@
-import React, { useEffect, useState, useCallback } from "react";
-import "./styles.css";
+import React, { useEffect, useState, useCallback, useReducer } from "react";
 import sha1 from "sha1";
+
+import "./styles.css";
 
 import BirdCanvas from "./BirdCanvas";
 import GraphCanvas from "./GraphCanvas";
 import Swarm from "./Swarm";
 import SimulationHistory from "./SimulationHistory";
+import SimpleMenu from "./SimpleMenu";
+
 import createPersistedState from "use-persisted-state";
 const useSimHistory = createPersistedState("sim-history");
 
@@ -19,7 +22,10 @@ export default function App() {
   const [graphHeight] = useState(50);
   const [boidsNormal, setBoidsNormal] = useState([]);
   const [resetCbs, setResetCbs] = useState([]);
-  const [simHistory, setSimHistory] = useSimHistory({});
+  const [simState, setSimState] = useState("done"); // freestyle, running, done
+  const [isolationFactor, setIsolationFactor] = useState(0);
+  //const [simHistory, setSimHistory] = useSimHistory({});
+  const [simHistory, setSimHistory] = useState({});
 
   useEffect(() => {
     const canvasNormal = document.getElementById("boidsCanvas-normal");
@@ -70,6 +76,12 @@ export default function App() {
     [setSimHistory]
   );
 
+  const notifySimDone = useCallback(simIsDone => {
+    if (simIsDone) {
+      setSimState("done");
+    }
+  }, []);
+
   return (
     <div className="app">
       <div className="normalContainer">
@@ -80,6 +92,7 @@ export default function App() {
           id={"graphCanvas-normal"}
           addResetListener={addResetListener}
           addSimHistory={addSimHistory}
+          notifySimDone={notifySimDone}
         />
         <div className="counters">
           <span className="normal">
@@ -95,6 +108,16 @@ export default function App() {
             canvasWidth={canvasWidth}
             canvasHeight={canvasHeight}
           />
+          {simState === "done" && (
+            <SimpleMenu
+              setBoids={setBoidsNormal}
+              setSimState={setSimState}
+              canvasWidth={canvasWidth}
+              canvasHeight={canvasHeight}
+              isolationFactor={isolationFactor}
+              reset={reset}
+            />
+          )}
           <Swarm
             boidsCtx={boidsNormalCtx}
             canvasWidth={canvasWidth}
@@ -102,13 +125,15 @@ export default function App() {
             boids={boidsNormal}
             setBoids={setBoidsNormal}
             resetCallback={reset}
+            isolationFactor={isolationFactor}
+            setIsolationFactor={setIsolationFactor}
           />
         </div>
-        <SimulationHistory
+        {/*<SimulationHistory
           history={simHistory}
           svgWidth={graphWidth}
           svgHeight={graphHeight}
-        />
+        />*/}
       </div>
     </div>
   );

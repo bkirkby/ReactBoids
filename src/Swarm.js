@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 import Boid from "./Boid";
 
@@ -6,7 +7,10 @@ import {
   calcSeparationHeading,
   calcAlignmentHeading,
   calcCohesionHeading,
-  pointDistance
+  pointDistance,
+  getBoidSpeed,
+  createBunch,
+  infectBoid
 } from "./boidsUtils";
 
 export default function Swarm({
@@ -15,14 +19,16 @@ export default function Swarm({
   canvasHeight,
   boids,
   setBoids,
-  resetCallback
+  resetCallback,
+  isolationFactor,
+  setIsolationFactor
 }) {
   const [step, setStep] = useState(1);
-  const [boidId, setBoidId] = useState(6);
+  //const [boidId, setBoidId] = useState(6);
   const [infectionRadius, setInfectionRadius] = useState(3);
   const [sdFactor, setSdFactor] = useState(0);
-  const [isolationFactor, setIsolationFactor] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const [devMode, setDevMode] = useState(true);
 
   const clearCanvas = useCallback(() => {
     if (boidsCtx) {
@@ -56,12 +62,6 @@ export default function Swarm({
     },
     [boids]
   );
-
-  const getBoidSpeed = () => {
-    const max = 8;
-    const min = 5;
-    return Math.floor(Math.random() * (max - min + 1) + min);
-  };
 
   const stepBoid = useCallback(
     boid => {
@@ -182,20 +182,21 @@ export default function Swarm({
   }, [stepBoid, setBoids]);
 
   const handleInfect = () => {
-    const mobileBoids = boids.filter(b => b.speed > 0);
-    const rndmIdx = Math.floor(Math.random() * mobileBoids.length);
-    const boidToInfect = mobileBoids[rndmIdx];
-    setBoids(
-      boids.map(boid => {
-        if (boidToInfect && boid.id === boidToInfect.id) {
-          return {
-            ...boid,
-            state: "infected"
-          };
-        }
-        return boid;
-      })
-    );
+    // const mobileBoids = boids.filter(b => b.speed > 0);
+    // const rndmIdx = Math.floor(Math.random() * mobileBoids.length);
+    // const boidToInfect = mobileBoids[rndmIdx];
+    // setBoids(
+    //   boids.map(boid => {
+    //     if (boidToInfect && boid.id === boidToInfect.id) {
+    //       return {
+    //         ...boid,
+    //         state: "infected"
+    //       };
+    //     }
+    //     return boid;
+    //   })
+    // );
+    setBoids(infectBoid(boids));
   };
 
   useEffect(() => {
@@ -210,26 +211,14 @@ export default function Swarm({
   }, [isolationFactor, setBoids]);
 
   const handleAddBunch = () => {
-    const bunch = 50;
-    const radius = 3;
-    let newBoids = [];
-    const isoFactor = isolationFactor / 100;
-
-    for (let i = 0; i < bunch; i++) {
-      newBoids.push({
-        id: boidId + i,
-        x: Math.random() * canvasWidth,
-        y: Math.random() * canvasHeight,
-        radius: radius,
-        heading: Math.random() * 2 * Math.PI - Math.PI,
-        speed: Math.random() < isoFactor ? 0 : getBoidSpeed(),
-        vision: 35,
-        radialSpeed: Math.PI / 21,
-        state: "normal"
-      });
-    }
+    const newBoids = createBunch(
+      50,
+      isolationFactor,
+      canvasWidth,
+      canvasHeight
+    );
     setBoids(boids => boids.concat(newBoids));
-    setBoidId(boidId => boidId + bunch);
+    // setBoidId(boidId => boidId + newBoids.length);
   };
 
   useEffect(() => {
@@ -260,13 +249,13 @@ export default function Swarm({
   };
 
   const handleAddOne = () => {
-    const radius = 1;
+    const radius = 2;
     const isoFactor = isolationFactor / 100;
 
     setBoids([
       ...boids,
       {
-        id: boidId,
+        id: uuidv4(),
         x: Math.random() * canvasWidth,
         y: Math.random() * canvasHeight,
         radius: radius,
@@ -277,7 +266,7 @@ export default function Swarm({
         state: "normal" // normal, infected, immune
       }
     ]);
-    setBoidId(boidId + 1);
+    // setBoidId(boidId + 1);
   };
 
   clearCanvas();
@@ -335,24 +324,26 @@ export default function Swarm({
           />
         </div>
       </div>
-      <div className="swarmButtonsContainer">
-        <button onClick={handleRandomClick}>random</button>
-        <button onClick={handleAddOne}>add one</button>
-        <button onClick={handleAddBunch}>add bunch</button>
-        <button onClick={handleStep}>step</button>
-        <button onClick={handleInfect}>infect</button>
-        <button
-          onClick={e => {
-            resetCallback();
-            setBoids([]);
-          }}
-        >
-          reset
-        </button>
-        <button onClick={() => setIsPaused(!isPaused)}>
-          {isPaused ? "resume" : "pause"}
-        </button>
-      </div>
+      {devMode && (
+        <div className="swarmButtonsContainer">
+          <button onClick={handleRandomClick}>random</button>
+          <button onClick={handleAddOne}>add one</button>
+          <button onClick={handleAddBunch}>add bunch</button>
+          <button onClick={handleStep}>step</button>
+          <button onClick={handleInfect}>infect</button>
+          <button
+            onClick={e => {
+              resetCallback();
+              setBoids([]);
+            }}
+          >
+            reset
+          </button>
+          <button onClick={() => setIsPaused(!isPaused)}>
+            {isPaused ? "resume" : "pause"}
+          </button>
+        </div>
+      )}
     </div>
   );
 }

@@ -6,7 +6,8 @@ export default function GraphCanvas({
   boids,
   id,
   addResetListener,
-  addSimHistory
+  addSimHistory,
+  notifySimDone
 }) {
   const [ctx, setCtx] = useState();
   const [boidGraph, setBoidGraph] = useState([]); // {numInfected:0, numNormal:0}
@@ -21,8 +22,10 @@ export default function GraphCanvas({
       });
       //console.log("bk: GraphCanvas.js: GraphCanvas: histGraph: ", histGraph);
       addSimHistory(histGraph);
+      //setIsGraphDone(false);
+      notifySimDone(true);
     }
-  }, [isGraphDone, boidGraph, addSimHistory]);
+  }, [isGraphDone, boidGraph, addSimHistory, notifySimDone]);
 
   useEffect(() => {
     addResetListener(() => {
