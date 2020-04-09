@@ -1,6 +1,7 @@
 import React from "react";
 
 import { createBunch, infectBoid } from "./boidsUtils";
+import { pageView } from "./googleAnalytics";
 
 const SimpleMenu = ({
   setIsolationFactor,
@@ -19,6 +20,7 @@ const SimpleMenu = ({
     setSimState("running");
     const newBoids = createBunch(50, 0, canvasWidth, canvasHeight);
     setBoids(infectBoid(newBoids));
+    pageView("/unconstrained");
   };
 
   const handleIsolationConstrained = () => {
@@ -35,6 +37,7 @@ const SimpleMenu = ({
       canvasHeight
     );
     setBoids(infectBoid(newBoids));
+    pageView("/isolationConstrained");
   };
 
   const handleSdConstrained = () => {
@@ -46,6 +49,7 @@ const SimpleMenu = ({
     setSimState("running");
     const newBoids = createBunch(population, 0, canvasWidth, canvasHeight);
     setBoids(infectBoid(newBoids));
+    pageView("/sdConstrained");
   };
 
   const handleBothConstrained = () => {
@@ -63,6 +67,7 @@ const SimpleMenu = ({
       canvasHeight
     );
     setBoids(infectBoid(newBoids));
+    pageView("/bothConstrained");
   };
 
   return (
@@ -84,8 +89,22 @@ const SimpleMenu = ({
         isolation constrained
       </button>
       <button onClick={handleBothConstrained}>both constrained</button>
-      <button onClick={() => setSimState("freestyle")}>freestyle mode</button>
-      <button onClick={() => setShowAbout(true)}>about</button>
+      <button
+        onClick={() => {
+          setSimState("freestyle");
+          pageView("/freestyle");
+        }}
+      >
+        freestyle mode
+      </button>
+      <button
+        onClick={() => {
+          setShowAbout(true);
+          pageView("/about");
+        }}
+      >
+        about
+      </button>
     </div>
   );
 };
