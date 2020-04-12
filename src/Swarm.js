@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 
-import Boid from "./Boid";
+import Boid, { BoidClass } from "./Boid";
 
 import {
   calcSeparationHeading,
@@ -65,10 +65,14 @@ export default function Swarm({
 
       // animFrameReq.current = requestAnimationFrame(stepBoid);
 
+      const mortalityRate = 0.042;
+      const msInfectionLasts = 3000;
+
       const neighbors = getNeighbors(boid);
 
       let heading = boid.heading;
       let state = boid.state;
+      let infectedTime = boid.infectedTime;
 
       if (neighbors && neighbors.length > 0) {
         const cohesionHeading = calcCohesionHeading(boid, neighbors);
@@ -88,7 +92,10 @@ export default function Swarm({
         });
 
         if (infectedCloseNeighbors && infectedCloseNeighbors.length > 0) {
-          state = "infected";
+          if (state !== "infected") {
+            state = "infected";
+            infectedTime = Date.now();
+          }
         }
 
         // change heading
@@ -148,7 +155,8 @@ export default function Swarm({
           : wrap(boid.y + Math.sin(heading) * boid.speed, 0, canvasHeight),
         heading: isPaused ? boid.heading : heading,
         speed: newSpeed,
-        state
+        state,
+        infectedTime
       };
     },
     [
@@ -205,7 +213,6 @@ export default function Swarm({
           ctx={boidsCtx}
           radius={boid.radius}
           heading={boid.heading}
-          color="red"
           state={boid.state}
           //vision={boid.vision}
         />

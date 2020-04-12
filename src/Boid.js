@@ -1,15 +1,22 @@
 import React, { useEffect } from "react";
+import { v4 as uuidv4 } from "uuid";
 
-export default function Boid({
-  x,
-  y,
-  heading,
-  radius,
-  color,
-  ctx,
-  vision,
-  state
-}) {
+export const generateNewBoid = () => {
+  return {
+    x: undefined,
+    y: undefined,
+    speed: undefined,
+    infectedTime: undefined,
+    id: uuidv4(),
+    radius: 2,
+    heading: Math.random() * 2 * Math.PI - Math.PI,
+    vision: 35,
+    radialSpeed: Math.PI / 21,
+    state: "normal"
+  };
+};
+
+export default function Boid({ x, y, heading, radius, ctx, vision, state }) {
   const stateColors = {
     normal: "#0033ff",
     infected: "#ffcc00",

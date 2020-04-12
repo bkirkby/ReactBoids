@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import { v4 as uuidv4 } from "uuid";
+import React from "react";
 
-import { infectBoid, createBunch, getBoidSpeed } from "./boidsUtils";
+import { infectRandomBoid, createBunch, getBoidSpeed } from "./boidsUtils";
+import { generateNewBoid } from "./Boid";
 
 const SwarmControl = ({
   sdFactor,
@@ -15,10 +15,10 @@ const SwarmControl = ({
   reset,
   isPaused,
   setIsPaused,
-  simState
+  freeStyleMode
 }) => {
   const handleInfect = () => {
-    setBoids(infectBoid(boids));
+    setBoids(infectRandomBoid(boids));
   };
 
   const handleAddBunch = () => {
@@ -32,9 +32,6 @@ const SwarmControl = ({
   };
 
   const handleRandomClick = () => {
-    // if (boidsCtx) {
-    //   clearCanvas();
-    // }
     setBoids(
       boids.map(boid => {
         return {
@@ -48,27 +45,40 @@ const SwarmControl = ({
   };
 
   const handleAddOne = () => {
-    const radius = 2;
     const isoFactor = isolationFactor / 100;
 
     setBoids([
       ...boids,
       {
-        id: uuidv4(),
+        ...generateNewBoid(),
         x: Math.random() * canvasWidth,
         y: Math.random() * canvasHeight,
-        radius: radius,
-        heading: Math.random() * 2 * Math.PI - Math.PI,
-        speed: Math.random() < isoFactor ? 0 : getBoidSpeed(),
-        vision: 35,
-        radialSpeed: Math.PI / 16,
-        state: "normal" // normal, infected, immune
+        speed: Math.random() < isoFactor ? 0 : getBoidSpeed()
       }
     ]);
   };
 
   return (
     <div className="swarmSliders">
+      {freeStyleMode && (
+        <div className="swarmButtonsContainer">
+          <button onClick={handleAddBunch}>add bunch</button>
+          <button onClick={handleAddOne}>add one</button>
+          <button onClick={handleRandomClick}>random</button>
+          <button onClick={handleInfect}>infect</button>
+          <button onClick={() => setIsPaused(!isPaused)}>
+            {isPaused ? "resume" : "pause"}
+          </button>
+          <button
+            onClick={e => {
+              reset();
+              setBoids([]);
+            }}
+          >
+            reset
+          </button>
+        </div>
+      )}
       <div className="sliderContainer">
         <div className="sliderLabel">
           <span>social distancing:</span>
@@ -105,25 +115,6 @@ const SwarmControl = ({
           value={isolationFactor}
         />
       </div>
-      {simState === "freestyle" && (
-        <div className="swarmButtonsContainer">
-          <button onClick={handleAddBunch}>add bunch</button>
-          <button onClick={handleAddOne}>add one</button>
-          <button onClick={handleRandomClick}>random</button>
-          <button onClick={handleInfect}>infect</button>
-          <button onClick={() => setIsPaused(!isPaused)}>
-            {isPaused ? "resume" : "pause"}
-          </button>
-          <button
-            onClick={e => {
-              reset();
-              setBoids([]);
-            }}
-          >
-            reset
-          </button>
-        </div>
-      )}
     </div>
   );
 };

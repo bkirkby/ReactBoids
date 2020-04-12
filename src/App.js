@@ -12,6 +12,8 @@ import SimpleMenu from "./SimpleMenu";
 import SwarmControl from "./SwarmControl";
 import About from "./About";
 
+import VerticalEllipses from "./components/svgs/VerticalEllipses";
+
 import { createBunch } from "./boidsUtils";
 
 const useSimHistory = createPersistedState("sim-history");
@@ -26,13 +28,15 @@ export default function App() {
   const [graphHeight] = useState(50);
   const [boidsNormal, setBoidsNormal] = useState([]);
   const [resetCbs, setResetCbs] = useState([]);
-  const [simState, setSimState] = useState("done"); // freestyle, running, done
+  const [simState, setSimState] = useState("done"); // running, done
   const [isolationFactor, setIsolationFactor] = useState(0);
   const [sdFactor, setSdFactor] = useState(0);
   //const [simHistory, setSimHistory] = useSimHistory({});
   const [simHistory, setSimHistory] = useState({});
   const [isPaused, setIsPaused] = useState(false);
   const [showAbout, setShowAbout] = useState(false);
+  const [showSimpleMenu, setShowSimpleMenu] = useState(true);
+  const [freeStyleMode, toggleFreeStyleMode] = useReducer(v => !v, false);
 
   useEffect(() => {
     const canvasNormal = document.getElementById("boidsCanvas-normal");
@@ -43,6 +47,18 @@ export default function App() {
     // setBoidsIsolationCtx(canvasIsolation.getContext("2d"));
     setBoidsNormal(createBunch(50, 0, canvasWidth, canvasHeight));
   }, [canvasWidth, canvasHeight]);
+
+  useEffect(() => {
+    if (simState === "running") {
+      setShowSimpleMenu(false);
+    }
+  }, [simState]);
+
+  // useEffect(() => {
+  //   if (freeStyleMode) {
+  //     setShowSimpleMenu(false);
+  //   }
+  // }, [freeStyleMode]);
 
   const zeroFill = num => {
     let ret = "";
@@ -84,23 +100,23 @@ export default function App() {
     [setSimHistory]
   );
 
-  const notifySimDone = useCallback(simIsDone => {
-    if (simIsDone) {
-      setSimState("done");
-    }
-  }, []);
-
-  const shouldShowSimpleMenu = () => {
-    return simState === "done";
-  };
-
-  const toggleSimpleMenu = () => {
-    if (shouldShowSimpleMenu()) {
-      setSimState("freestyle");
-    } else {
-      setSimState("done");
-    }
-  };
+  const notifySimDone = useCallback(
+    simIsDone => {
+      if (simIsDone) {
+        setSimState("done");
+      }
+      console.log(
+        "bk: App.js: notifySimDone: sim run time: ",
+        Date.now() -
+          boidsNormal
+            .filter(b => b.infectedTime)
+            .reduce((acc, val) =>
+              acc.infectedTime > val.infectedTime ? val : acc
+            )
+      );
+    },
+    [boidsNormal]
+  );
 
   return (
     <div className="app">
@@ -116,34 +132,72 @@ export default function App() {
           notifySimDone={notifySimDone}
         />
         <div className="countersContainer">
-          <span>
-            <span className="normalText">
-              {zeroFill(boidsNormal.filter(b => b.state === "normal").length)}
-            </span>
-            <span className="infectedText">
-              {zeroFill(boidsNormal.filter(b => b.state === "infected").length)}
-            </span>
-          </span>
-          <span>
-            <button
-              id="menuButton"
+          <div style={{ display: "flex", flexDirection: "row" }}>
+            <div
               style={{
-                borderStyle: shouldShowSimpleMenu() ? "inset" : "outset"
+                marginLeft: "10px",
+                display: "flex",
+                flexDirection: "column"
               }}
-              onClick={() => toggleSimpleMenu()}
             >
-              ...
-            </button>
-          </span>
+              <div
+                style={{
+                  fontFamily: '"VT323", monospace',
+                  fontWeight: "bold",
+                  color: "#0033ff"
+                }}
+              >
+                healthy
+              </div>
+              <span className="normalText">
+                {zeroFill(boidsNormal.filter(b => b.state === "normal").length)}
+              </span>
+            </div>
+            <div
+              style={{
+                marginLeft: "10px",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center"
+              }}
+            >
+              <div
+                style={{
+                  fontFamily: '"VT323", monospace',
+                  fontWeight: "bold",
+                  color: "#ffcc00"
+                }}
+              >
+                infected
+              </div>
+              <span className="infectedText">
+                {zeroFill(
+                  boidsNormal.filter(b => b.state === "infected").length
+                )}
+              </span>
+            </div>
+          </div>
+
+          <button
+            id="menuButton"
+            style={{
+              borderStyle: showSimpleMenu ? "inset" : "outset",
+              padding: "0px",
+              maxHeight: "auto"
+            }}
+            onClick={() => setShowSimpleMenu(!showSimpleMenu)}
+          >
+            <VerticalEllipses />
+          </button>
         </div>
         <div className="boidContainer">
           <BirdCanvas
             id="boidsCanvas-normal"
             canvasWidth={canvasWidth}
             canvasHeight={canvasHeight}
-            opacity={shouldShowSimpleMenu() ? 0.2 : 1}
+            opacity={showSimpleMenu ? 0.2 : 1}
           />
-          {shouldShowSimpleMenu() && (
+          {showSimpleMenu && (
             <SimpleMenu
               setBoids={setBoidsNormal}
               setSimState={setSimState}
@@ -153,6 +207,8 @@ export default function App() {
               setSdFactor={setSdFactor}
               reset={reset}
               setShowAbout={setShowAbout}
+              toggleFreeStyleMode={toggleFreeStyleMode}
+              freeStyleMode={freeStyleMode}
             />
           )}
           <Swarm
@@ -174,7 +230,7 @@ export default function App() {
             setSdFactor={setSdFactor}
             isPaused={isPaused}
             setIsPaused={setIsPaused}
-            simState={simState}
+            freeStyleMode={freeStyleMode}
             setBoids={setBoidsNormal}
             boids={boidsNormal}
             canvasWidth={canvasWidth}

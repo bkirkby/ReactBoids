@@ -3,53 +3,70 @@ import React from "react";
 const About = ({ setShowAbout }) => {
   return (
     <div className="about">
-      <button onClick={() => setShowAbout(false)}>close</button>
-      <div className="spacer" />
-      <div style={{ fontSize: "x-large" }}>infection simulator v0.1β</div>
-      <div style={{ fontSize: "x-small" }}>by brian kirkby</div>
-      <div className="spacer" />
-      <div>
-        the infection simulator was conceived during the covid19 lockdown of
-        2020. it's purpose is to give just a sense of what protective measures
-        could do to "flatten the curve" on the spread of virii.
+      <div
+        style={{
+          width: "100%",
+          marginRight: "5px"
+        }}
+      >
+        <button style={{ width: "100%" }} onClick={() => setShowAbout(false)}>
+          close
+        </button>
       </div>
-      <div className="spacer" />
-      <div>
-        i think it's achieved that result even though it's a very basic
-        simulator for both human and virii behaivor.
-      </div>
-      <div className="spacer" />
-      <div>
-        the people (i call them "pips") in this sim have very simple behavior
-        about the environment around them. they are social creatures and will
-        always feel a pull toward the mid point location of the people around
-        them and will adjust accordingly to move there. there is also a pull for
-        these pips to go toward the average trajectory of the pips around them.
-      </div>
-      <div className="spacer" />
-      <div>
-        they also have a limit to how fast they are able to change their
-        direction.
-      </div>
-      <div className="spacer" />
-      <div>
+      <div className="scrollable">
+        <p />
+        <div style={{ textAlign: "center" }}>
+          <span style={{ paddingBottom: "0px", fontSize: "xx-large" }}>
+            infection simulator
+          </span>
+          <span style={{ paddingTop: "0px", fontSize: "small" }}>
+            by{" "}
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              href="https://www.buymeacoffee.com/briankirkby"
+            >
+              kirkby
+            </a>
+          </span>
+        </div>
+        <p />
+        tl;dr the menu items will run simulations based on the specified
+        constraints. you can also enter freestyle mode to play around with the
+        mitigation params.
+        <p style={{ borderTop: "1px solid black" }} />
+        the covid infection simulator was conceived during the covid19 lockdown
+        of 2020. i wondered if even simple simulations would show the mitigation
+        measures that society was taking during lockdown. specifically social
+        distancing and isolation.
+        <p />
+        social distancing is achieved in this simulation by having the people (i
+        call them "pips") pay attention to the other pip's location around them
+        and adjust their trajectory away from the middle of the crowd. the
+        larger the social distancing factor, the large the radius where the pip
+        will look to get away from other pips.
+        <p />
+        isolation is achieved in this simulation by having people stay where
+        they start and not travel around. the factor on the isolation slide is
+        the percentage of the number of pips in the population that will stay
+        put.
+        <p />
+        pips have very simple behavior based on the immediate environment around
+        them. they are social creatures and will always feel a pull toward the
+        mid point location of the people around them and will adjust accordingly
+        to move there. there is also a pull for these pips to go toward the
+        average trajectory of the pips around them.
+        <p />
+        pips also have a limit to how fast they are able to change their
+        direction which creates a constant strain on competing desires, much
+        like real life. the pip's social desires to go where other pips are and
+        in the same direction as other pips conflict with their constraints
+        staying put and/or staying away from other pips.
+        <p />
         the virii behavior is extremely simple in that when an infected pip gets
-        close enough to another pip, it will infect that new pip.
+        close enough to another pip, it will transfer the infection.
+        <p />
       </div>
-      <div className="spacer" />
-      <div>d</div>
-      <div className="spacer" />
-      <div className="spacer" />
-      <div>
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://www.buymeacoffee.com/briankirkby"
-        >
-          support me
-        </a>
-      </div>
-      <div className="spacer" />
     </div>
   );
 };

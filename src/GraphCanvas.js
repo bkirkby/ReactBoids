@@ -22,7 +22,7 @@ export default function GraphCanvas({
       });
       //console.log("bk: GraphCanvas.js: GraphCanvas: histGraph: ", histGraph);
       addSimHistory(histGraph);
-      //setIsGraphDone(false);
+      setIsGraphDone(false);
       notifySimDone(true);
     }
   }, [isGraphDone, boidGraph, addSimHistory, notifySimDone]);

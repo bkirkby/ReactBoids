@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from "uuid";
+import { generateNewBoid } from "./Boid.js";
 
 export const pointDistance = (p1, p2) => {
   return Math.sqrt(
@@ -85,27 +85,21 @@ export const createBunch = (
   canvasWidth,
   canvasHeight
 ) => {
-  const radius = 2;
   let newBoids = [];
   const isoFactor = isolationFactor / 100;
 
   for (let i = 0; i < bunchNumber; i++) {
     newBoids.push({
-      id: uuidv4(),
+      ...generateNewBoid(),
       x: Math.random() * canvasWidth,
       y: Math.random() * canvasHeight,
-      radius: radius,
-      heading: Math.random() * 2 * Math.PI - Math.PI,
-      speed: Math.random() < isoFactor ? 0 : getBoidSpeed(),
-      vision: 35,
-      radialSpeed: Math.PI / 21,
-      state: "normal"
+      speed: Math.random() < isoFactor ? 0 : getBoidSpeed()
     });
   }
   return newBoids;
 };
 
-export const infectBoid = boids => {
+export const infectRandomBoid = boids => {
   const mobileAndHealthyBoids = boids.filter(
     b => b.speed > 0 && b.state === "normal"
   );
@@ -115,7 +109,8 @@ export const infectBoid = boids => {
     if (boidToInfect && boid.id === boidToInfect.id) {
       return {
         ...boid,
-        state: "infected"
+        state: "infected",
+        infectedTime: Date.now()
       };
     }
     return boid;

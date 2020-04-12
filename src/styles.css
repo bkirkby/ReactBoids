@@ -1,5 +1,5 @@
 .App {
-  font-family: monospace;
+  font-family: "VT323", monospace;
   text-align: center;
 }
 
@@ -8,20 +8,26 @@ html {
 }
 
 button {
-  font-family: monospace;
+  font-family: "VT323", monospace;
   color: #ffcc00;
   background-color: #454545;
   padding-top: 2px;
   padding-bottom: 2px;
 }
 
+button:hover {
+  color: #fbff00;
+  background-color: #353535;
+}
+
 h2 {
-  font-family: monospace;
+  font-family: "VT323", monospace;
 }
 
 .normalContainer {
   display: flex;
   flex-flow: column;
+  border: 5px solid #454545;
 }
 
 .app {
@@ -67,16 +73,22 @@ canvas {
 }
 
 span {
-  font-family: monospace;
+  font-family: "VT323", monospace;
   padding: 5px;
 }
 
 span.infectedText {
   color: #ffcc00;
+  font-size: large;
+  font-weight: bold;
+  text-align: center;
 }
 
 span.normalText {
   color: #0033ff;
+  font-size: large;
+  font-weight: bold;
+  text-align: center;
 }
 
 svg {
@@ -146,12 +158,31 @@ div.about {
   border: 4px solid black;
   padding: 5px;
   z-index: 1;
-  width: 90%;
+  width: 75%;
   max-width: 600px;
+  max-height: 80%;
+  font-family: '"VT323", monospace';
 }
 
-div.about > div {
-  font-family: monospace;
+div.about > button {
+  width: 100%;
+}
+
+div.scrollable {
+  font-family: "VT323", monospace;
+  overflow-y: scroll;
+  height: 475px;
+  border-top: 5px solid #454545;
+}
+
+div.about > h2 {
+  font-family: "VT323", monospace;
+  height: 100%;
+}
+
+div.about > p {
+  padding: 0px;
+  margin: 4px;
 }
 
 div.spacer {
