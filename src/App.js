@@ -11,8 +11,7 @@ import SimulationHistory from "./SimulationHistory";
 import SimpleMenu from "./SimpleMenu";
 import SwarmControl from "./SwarmControl";
 import About from "./About";
-
-import VerticalEllipses from "./components/svgs/VerticalEllipses";
+import SwarmCounters from "./SwarmCounters";
 
 import { createBunch } from "./boidsUtils";
 
@@ -59,15 +58,6 @@ export default function App() {
   //     setShowSimpleMenu(false);
   //   }
   // }, [freeStyleMode]);
-
-  const zeroFill = num => {
-    let ret = "";
-    const maxLen = 4;
-    for (let i = maxLen - ("" + num).length; i > 0; i--) {
-      ret += "0";
-    }
-    return ret + num;
-  };
 
   const addResetListener = useCallback(rl => {
     setResetCbs(rcb => [...rcb, rl]);
@@ -131,65 +121,11 @@ export default function App() {
           addSimHistory={addSimHistory}
           notifySimDone={notifySimDone}
         />
-        <div className="countersContainer">
-          <div style={{ display: "flex", flexDirection: "row" }}>
-            <div
-              style={{
-                marginLeft: "10px",
-                display: "flex",
-                flexDirection: "column"
-              }}
-            >
-              <div
-                style={{
-                  fontFamily: '"VT323", monospace',
-                  fontWeight: "bold",
-                  color: "#0033ff"
-                }}
-              >
-                healthy
-              </div>
-              <span className="normalText">
-                {zeroFill(boidsNormal.filter(b => b.state === "normal").length)}
-              </span>
-            </div>
-            <div
-              style={{
-                marginLeft: "10px",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center"
-              }}
-            >
-              <div
-                style={{
-                  fontFamily: '"VT323", monospace',
-                  fontWeight: "bold",
-                  color: "#ffcc00"
-                }}
-              >
-                infected
-              </div>
-              <span className="infectedText">
-                {zeroFill(
-                  boidsNormal.filter(b => b.state === "infected").length
-                )}
-              </span>
-            </div>
-          </div>
-
-          <button
-            id="menuButton"
-            style={{
-              borderStyle: showSimpleMenu ? "inset" : "outset",
-              padding: "0px",
-              maxHeight: "auto"
-            }}
-            onClick={() => setShowSimpleMenu(!showSimpleMenu)}
-          >
-            <VerticalEllipses />
-          </button>
-        </div>
+        <SwarmCounters
+          boids={boidsNormal}
+          showSimpleMenu={showSimpleMenu}
+          setShowSimpleMenu={setShowSimpleMenu}
+        />
         <div className="boidContainer">
           <BirdCanvas
             id="boidsCanvas-normal"

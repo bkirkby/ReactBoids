@@ -1,5 +1,6 @@
 .App {
   font-family: "VT323", monospace;
+  font-size: large;
   text-align: center;
 }
 
@@ -9,6 +10,7 @@ html {
 
 button {
   font-family: "VT323", monospace;
+  font-size: large;
   color: #ffcc00;
   background-color: #454545;
   padding-top: 2px;
@@ -22,6 +24,7 @@ button:hover {
 
 h2 {
   font-family: "VT323", monospace;
+  font-size: large;
 }
 
 .normalContainer {
@@ -74,21 +77,40 @@ canvas {
 
 span {
   font-family: "VT323", monospace;
+  font-size: large;
   padding: 5px;
 }
 
-span.infectedText {
+.infectedText {
   color: #ffcc00;
-  font-size: large;
+  font-size: x-large;
   font-weight: bold;
   text-align: center;
+  font-family: "VT323", monospace;
 }
 
-span.normalText {
+.normalText {
   color: #0033ff;
-  font-size: large;
+  font-size: x-large;
   font-weight: bold;
   text-align: center;
+  font-family: "VT323", monospace;
+}
+
+.immuneText {
+  color: lightgreen;
+  font-size: x-large;
+  font-weight: bold;
+  text-align: center;
+  font-family: "VT323", monospace;
+}
+
+.deadText {
+  color: darkgrey;
+  font-size: x-large;
+  font-weight: bold;
+  text-align: center;
+  font-family: "VT323", monospace;
 }
 
 svg {
@@ -170,6 +192,7 @@ div.about > button {
 
 div.scrollable {
   font-family: "VT323", monospace;
+  font-size: large;
   overflow-y: scroll;
   height: 475px;
   border-top: 5px solid #454545;
@@ -177,6 +200,7 @@ div.scrollable {
 
 div.about > h2 {
   font-family: "VT323", monospace;
+  font-size: large;
   height: 100%;
 }
 

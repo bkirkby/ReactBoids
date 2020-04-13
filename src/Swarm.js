@@ -66,7 +66,7 @@ export default function Swarm({
       // animFrameReq.current = requestAnimationFrame(stepBoid);
 
       const mortalityRate = 0.042;
-      const msInfectionLasts = 3000;
+      const msInfectionLasts = 7000;
 
       const neighbors = getNeighbors(boid);
 
@@ -91,7 +91,12 @@ export default function Swarm({
           );
         });
 
-        if (infectedCloseNeighbors && infectedCloseNeighbors.length > 0) {
+        if (
+          boid.state !== "dead" &&
+          boid.state !== "immune" &&
+          infectedCloseNeighbors &&
+          infectedCloseNeighbors.length > 0
+        ) {
           if (state !== "infected") {
             state = "infected";
             infectedTime = Date.now();
@@ -138,12 +143,29 @@ export default function Swarm({
         }
       }
 
-      const newSpeed =
+      let newSpeed =
         boid.speed === 0
           ? boid.speed
           : Math.random() < 0.005
           ? getBoidSpeed()
           : boid.speed;
+
+      // const mortalityRate = 0.042;
+      // const msInfectionLasts = 7000;
+
+      // check for immunity or death
+      if (
+        boid.infectedTime &&
+        boid.infectedTime + msInfectionLasts < Date.now() &&
+        boid.state === "infected"
+      ) {
+        if (Math.random() < mortalityRate) {
+          state = "dead";
+          newSpeed = 0;
+        } else {
+          state = "immune";
+        }
+      }
 
       return {
         ...boid,

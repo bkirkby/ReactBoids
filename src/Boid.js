@@ -20,7 +20,8 @@ export default function Boid({ x, y, heading, radius, ctx, vision, state }) {
   const stateColors = {
     normal: "#0033ff",
     infected: "#ffcc00",
-    immune: "pink"
+    immune: "lightgreen",
+    dead: "darkgrey"
   };
   useEffect(() => {
     // draw to canvas
