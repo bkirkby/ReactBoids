@@ -16,13 +16,23 @@ export const generateNewBoid = () => {
   };
 };
 
-export default function Boid({ x, y, heading, radius, ctx, vision, state }) {
-  const stateColors = {
-    normal: "#0033ff",
-    infected: "#ffcc00",
-    immune: "lightgreen",
-    dead: "darkgrey"
-  };
+export const infectionStateColors = {
+  normal: "#0033ff",
+  infected: "#ffcc00",
+  immune: "lightgreen",
+  dead: "darkgrey"
+};
+
+export default function Boid({
+  x,
+  y,
+  heading,
+  radius,
+  ctx,
+  vision,
+  state,
+  timeStamp
+}) {
   useEffect(() => {
     // draw to canvas
     if (ctx) {
@@ -32,8 +42,8 @@ export default function Boid({ x, y, heading, radius, ctx, vision, state }) {
       // body and nose
       ctx.setLineDash([]);
       ctx.globalAlpha = 1;
-      ctx.fillStyle = stateColors[state];
-      ctx.strokeStyle = stateColors[state];
+      ctx.fillStyle = infectionStateColors[state];
+      ctx.strokeStyle = infectionStateColors[state];
       ctx.lineWidth = 2;
 
       ctx.beginPath();
@@ -56,7 +66,7 @@ export default function Boid({ x, y, heading, radius, ctx, vision, state }) {
         ctx.stroke();
       }
     }
-  }, [x, y, radius, heading, state, stateColors, ctx, vision]);
+  }, [x, y, radius, heading, state, ctx, vision, timeStamp]);
 
   return <></>;
 }

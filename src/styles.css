@@ -183,7 +183,7 @@ div.about {
   width: 75%;
   max-width: 600px;
   max-height: 80%;
-  font-family: '"VT323", monospace';
+  font-family: "Roboto", sans-serif;
 }
 
 div.about > button {
@@ -191,15 +191,15 @@ div.about > button {
 }
 
 div.scrollable {
-  font-family: "VT323", monospace;
-  font-size: large;
+  font-family: "Roboto", sans-serif;
+  font-size: medium;
   overflow-y: scroll;
   height: 475px;
   border-top: 5px solid #454545;
 }
 
 div.about > h2 {
-  font-family: "VT323", monospace;
+  font-family: "Roboto", sans-serif;
   font-size: large;
   height: 100%;
 }

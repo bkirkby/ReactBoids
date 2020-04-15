@@ -1,6 +1,11 @@
 import React from "react";
 
-import { infectRandomBoid, createBunch, getBoidSpeed } from "./boidsUtils";
+import {
+  infectRandomBoid,
+  createBunch,
+  getBoidSpeed,
+  BUNCH_SIZE
+} from "./boidsUtils";
 import { generateNewBoid } from "./Boid";
 
 const SwarmControl = ({
@@ -23,7 +28,7 @@ const SwarmControl = ({
 
   const handleAddBunch = () => {
     const newBoids = createBunch(
-      50,
+      BUNCH_SIZE,
       isolationFactor,
       canvasWidth,
       canvasHeight

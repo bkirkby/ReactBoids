@@ -13,7 +13,8 @@ import SwarmControl from "./SwarmControl";
 import About from "./About";
 import SwarmCounters from "./SwarmCounters";
 
-import { createBunch } from "./boidsUtils";
+import { createBunch, BUNCH_SIZE } from "./boidsUtils";
+import { generateNewBoid } from "./Boid";
 
 const useSimHistory = createPersistedState("sim-history");
 
@@ -40,11 +41,18 @@ export default function App() {
   useEffect(() => {
     const canvasNormal = document.getElementById("boidsCanvas-normal");
     setBoidsNormalCtx(canvasNormal.getContext("2d"));
-    // const canvasSD = document.getElementById("boidsCanvas-sd");
-    // setBoidsSDCtx(canvasSD.getContext("2d"));
-    // const canvasIsolation = document.getElementById("boidsCanvas-isolation");
-    // setBoidsIsolationCtx(canvasIsolation.getContext("2d"));
-    setBoidsNormal(createBunch(50, 0, canvasWidth, canvasHeight));
+
+    setBoidsNormal(createBunch(BUNCH_SIZE, 0, canvasWidth, canvasHeight));
+    // setBoidsNormal([
+    //   {
+    //     ...generateNewBoid(),
+    //     x: canvasWidth / 2,
+    //     y: canvasHeight / 2,
+    //     state: "dead",
+    //     speed: 0,
+    //     infectedTime: 0
+    //   }
+    // ]);
   }, [canvasWidth, canvasHeight]);
 
   useEffect(() => {
@@ -145,6 +153,7 @@ export default function App() {
               setShowAbout={setShowAbout}
               toggleFreeStyleMode={toggleFreeStyleMode}
               freeStyleMode={freeStyleMode}
+              setShowSimpleMenu={setShowSimpleMenu}
             />
           )}
           <Swarm

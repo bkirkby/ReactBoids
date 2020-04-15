@@ -1,5 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 
+import { infectionStateColors } from "./Boid";
+
 export default function GraphCanvas({
   canvasWidth,
   canvasHeight,
@@ -40,45 +42,47 @@ export default function GraphCanvas({
     if (ctx) {
       ctx.clearRect(0, 0, canvasWidth, canvasHeight);
       boidGraph.forEach((bg, i) => {
-        const infectedHeight = (bg.numInfected / bg.numNormal) * canvasHeight;
-        const normalHeight = canvasHeight - infectedHeight;
-
-        // infected
-        ctx.beginPath();
-        ctx.fillStyle = "#ffcc00";
-        ctx.fillRect(
-          i * lineWidth,
-          canvasHeight - infectedHeight,
-          lineWidth,
-          infectedHeight
-        );
-        ctx.closePath();
+        const infectedHeight = (bg.numInfected / bg.numTotal) * canvasHeight;
+        const immuneHeight = (bg.numImmune / bg.numTotal) * canvasHeight;
+        const normalHeight = (bg.numNormal / bg.numTotal) * canvasHeight;
+        const deadHeight = (bg.numDead / bg.numTotal) * canvasHeight;
 
         // normal
         ctx.beginPath();
-        ctx.fillStyle = "#0033ff";
+        ctx.fillStyle = infectionStateColors["normal"];
         ctx.fillRect(i * lineWidth, 0, lineWidth, normalHeight);
+        ctx.closePath();
+
+        // infected
+        ctx.beginPath();
+        ctx.fillStyle = infectionStateColors["infected"];
+        ctx.fillRect(i * lineWidth, normalHeight, lineWidth, infectedHeight);
+        ctx.closePath();
+
+        // immune
+        ctx.beginPath();
+        ctx.fillStyle = infectionStateColors["immune"];
+        ctx.fillRect(
+          i * lineWidth,
+          normalHeight + infectedHeight,
+          lineWidth,
+          immuneHeight
+        );
+        ctx.closePath();
+
+        // dead
+        ctx.beginPath();
+        ctx.fillStyle = infectionStateColors["dead"];
+        ctx.fillRect(
+          i * lineWidth,
+          normalHeight + infectedHeight + immuneHeight,
+          lineWidth,
+          deadHeight
+        );
         ctx.closePath();
       });
     }
   }, [ctx, boidGraph, canvasHeight, canvasWidth]);
-
-  // const handleStepBoidGraph = e => {
-  //   e.preventDefault();
-  //   const numInfected = boids.filter(b => b.state === "infected").length;
-  //   const numTotal = boids.length;
-  //   if (numInfected < numTotal) {
-  //     setBoidGraph(boidGraph => {
-  //       return [
-  //         ...boidGraph,
-  //         {
-  //           numNormal: numTotal,
-  //           numInfected: numInfected
-  //         }
-  //       ];
-  //     });
-  //   }
-  // };
 
   const shouldUpdateBoidGraph = useCallback(() => {
     const graphUpdateInterval = 60;
@@ -124,8 +128,11 @@ export default function GraphCanvas({
             return [
               ...boidGraph,
               {
-                numNormal: boids.length,
-                numInfected: boids.filter(b => b.state === "infected").length
+                numTotal: boids.length,
+                numNormal: boids.filter(b => b.state === "normal").length,
+                numInfected: boids.filter(b => b.state === "infected").length,
+                numImmune: boids.filter(b => b.state === "immune").length,
+                numDead: boids.filter(b => b.state === "dead").length
               }
             ];
           }

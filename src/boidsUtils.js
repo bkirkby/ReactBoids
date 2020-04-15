@@ -79,6 +79,8 @@ export const getBoidSpeed = () => {
   return Math.floor(Math.random() * (max - min + 1) + min);
 };
 
+export const BUNCH_SIZE = 100;
+
 export const createBunch = (
   bunchNumber,
   isolationFactor,

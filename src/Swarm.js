@@ -65,7 +65,7 @@ export default function Swarm({
 
       // animFrameReq.current = requestAnimationFrame(stepBoid);
 
-      const mortalityRate = 0.042;
+      const mortalityRate = 0.42;
       const msInfectionLasts = 7000;
 
       const neighbors = getNeighbors(boid);
@@ -236,6 +236,7 @@ export default function Swarm({
           radius={boid.radius}
           heading={boid.heading}
           state={boid.state}
+          timeStamp={Date.now()}
           //vision={boid.vision}
         />
       ))}
