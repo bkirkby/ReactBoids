@@ -14,7 +14,14 @@ const SwarmCounters = ({ boids, showSimpleMenu, setShowSimpleMenu }) => {
 
   return (
     <div className="countersContainer">
-      <div style={{ display: "flex", flexDirection: "row" }}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          width: "100%",
+          justifyContent: "space-around"
+        }}
+      >
         <div
           style={{
             marginLeft: "10px",
@@ -53,7 +60,7 @@ const SwarmCounters = ({ boids, showSimpleMenu, setShowSimpleMenu }) => {
             {zeroFill(boids.filter(b => b.state === "immune").length)}
           </span>
         </div>
-        <div
+        {/* <div
           style={{
             marginLeft: "10px",
             display: "flex",
@@ -65,7 +72,7 @@ const SwarmCounters = ({ boids, showSimpleMenu, setShowSimpleMenu }) => {
           <span className="deadText">
             {zeroFill(boids.filter(b => b.state === "dead").length)}
           </span>
-        </div>
+        </div> */}
       </div>
 
       <button

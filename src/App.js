@@ -9,6 +9,7 @@ import GraphCanvas from "./GraphCanvas";
 import Swarm from "./Swarm";
 import SimulationHistory from "./SimulationHistory";
 import SimpleMenu from "./SimpleMenu";
+import ReplayMenu from "./ReplayMenu";
 import SwarmControl from "./SwarmControl";
 import About from "./About";
 import SwarmCounters from "./SwarmCounters";
@@ -22,9 +23,9 @@ export default function App() {
   const [boidsNormalCtx, setBoidsNormalCtx] = useState();
   // const [boidsSDCtx, setBoidsSDCtx] = useState();
   // const [boidsIsolationCtx, setBoidsIsolationCtx] = useState();
-  const [canvasWidth] = useState(400);
+  const [canvasWidth] = useState(500);
   const [canvasHeight] = useState(350);
-  const [graphWidth] = useState(400);
+  const [graphWidth] = useState(500);
   const [graphHeight] = useState(50);
   const [boidsNormal, setBoidsNormal] = useState([]);
   const [resetCbs, setResetCbs] = useState([]);
@@ -36,6 +37,8 @@ export default function App() {
   const [isPaused, setIsPaused] = useState(false);
   const [showAbout, setShowAbout] = useState(false);
   const [showSimpleMenu, setShowSimpleMenu] = useState(true);
+  const [showReplay, setShowReplay] = useState(false);
+  const [simRunning, setSimRunning] = useState(false);
   const [freeStyleMode, toggleFreeStyleMode] = useReducer(v => !v, false);
 
   useEffect(() => {
@@ -103,15 +106,17 @@ export default function App() {
       if (simIsDone) {
         setSimState("done");
       }
-      console.log(
-        "bk: App.js: notifySimDone: sim run time: ",
-        Date.now() -
-          boidsNormal
-            .filter(b => b.infectedTime)
-            .reduce((acc, val) =>
-              acc.infectedTime > val.infectedTime ? val : acc
-            )
-      );
+      // setShowReplay(!showSimpleMenu);
+      // setShowSimpleMenu(true);
+      // console.log(
+      //   "bk: App.js: notifySimDone: sim run time: ",
+      //   Date.now() -
+      //     boidsNormal
+      //       .filter(b => b.infectedTime)
+      //       .reduce((acc, val) =>
+      //         acc.infectedTime > val.infectedTime ? val : acc
+      //       )
+      // );
     },
     [boidsNormal]
   );
@@ -156,6 +161,7 @@ export default function App() {
               setShowSimpleMenu={setShowSimpleMenu}
             />
           )}
+          {showReplay && <ReplayMenu />}
           <Swarm
             boidsCtx={boidsNormalCtx}
             canvasWidth={canvasWidth}

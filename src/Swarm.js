@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 
-import Boid, { BoidClass } from "./Boid";
+import Boid from "./Boid";
 
 import {
   calcSeparationHeading,
@@ -65,7 +65,7 @@ export default function Swarm({
 
       // animFrameReq.current = requestAnimationFrame(stepBoid);
 
-      const mortalityRate = 0.42;
+      const mortalityRate = 0.0; //0.042;
       const msInfectionLasts = 7000;
 
       const neighbors = getNeighbors(boid);

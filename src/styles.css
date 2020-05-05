@@ -46,7 +46,6 @@ h2 {
   border-bottom: 2px solid #454545;
   background-color: black;
   justify-content: space-between;
-  align-content: center;
 }
 
 .graphContainer {
@@ -157,6 +156,17 @@ div.simpleMenu {
   left: 50%;
   transform: translateX(-50%);
   margin-top: 25px;
+}
+
+div.replayMenu {
+  display: flex;
+  justify-content: center;
+  flex-flow: column;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 25px;
+  background-color: grey;
 }
 
 #menuButton {

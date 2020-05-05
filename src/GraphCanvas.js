@@ -86,8 +86,9 @@ export default function GraphCanvas({
 
   const shouldUpdateBoidGraph = useCallback(() => {
     const graphUpdateInterval = 60;
+    const numInfected = boids.filter(b => b.state === "infected").length;
     return lastGraphUpdate + graphUpdateInterval <= Date.now();
-  }, [lastGraphUpdate]);
+  }, [lastGraphUpdate, boids]);
 
   useEffect(() => {
     setCtx(document.getElementById(id).getContext("2d"));
@@ -100,28 +101,16 @@ export default function GraphCanvas({
   useEffect(() => {
     // updateBoidGraph
     const numInfected = boids.filter(b => b.state === "infected").length;
+    const numImmune = boids.filter(b => b.state === "immune").length;
     if (shouldUpdateBoidGraph()) {
-      if (boids.length && numInfected === boids.length) {
-        // all are infected, so see if we need to include the final
-        // boidGraph
-        setBoidGraph(boidGraph => {
-          const lastNumNormal = boidGraph.length
-            ? boidGraph[boidGraph.length - 1].numNormal
-            : 0;
-          const lastNumInfected = boidGraph.length
-            ? boidGraph[boidGraph.length - 1].numInfected
-            : 0;
-          if (lastNumNormal > lastNumInfected) {
-            return [
-              ...boidGraph,
-              { numNormal: boids.length, numInfected: boids.length }
-            ];
-          }
-          setIsGraphDone(true);
-          return boidGraph;
-        });
-      } else if (boids.length && numInfected < boids.length && numInfected) {
-        // some are infected and not all are infected
+      if (
+        (numInfected === 0 && numImmune > 0) ||
+        boidGraph.length >= canvasWidth
+      ) {
+        // we are done
+        setIsGraphDone(true);
+      } else {
+        // update graph
         setBoidGraph(boidGraph => {
           // only add to boidGraph if we have canvas space to show it
           if (boidGraph.length < canvasWidth) {
@@ -136,12 +125,12 @@ export default function GraphCanvas({
               }
             ];
           }
-          setIsGraphDone(true);
+          // setIsGraphDone(true);
           return boidGraph;
         });
       }
     }
-  }, [boids, shouldUpdateBoidGraph, canvasWidth]);
+  }, [boids, shouldUpdateBoidGraph, canvasWidth, boidGraph.length]);
 
   return (
     <div className="graphContainer">
