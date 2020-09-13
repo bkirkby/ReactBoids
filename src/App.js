@@ -103,18 +103,15 @@ export default function App() {
   );
 
   const notifySimDone = useCallback(
-    simIsDone => {
-      if (simIsDone && simState === 'running') {
+    boidData => {
+      if (boidData && simState === 'running') {
         // console.log('bk: simIsDone: ', simIsDone, process.env.REACT_APP_API_SERVER);
-        console.log('bk: simIsDone: graphrun: ',
-          { isolation: isolationFactor,
-            social_distance: (sdFactor / 5).toFixed(1), //sdFactor,
-            population: boidsNormal.length,
-            dead_array: [],
-            immune_array: [],
-            healthy_array: [],
-            infected_array: []
-          });
+        const combined_data = {
+          ...boidData,
+          isolation: isolationFactor,
+          social_distance: (sdFactor /5).toFixed(1)
+        }
+        console.log('bk: graphrun: ', combined_data );
         setSimState("done");
         // sendGraphRun({
           // isolation: 

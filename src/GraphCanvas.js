@@ -29,7 +29,7 @@ export default function GraphCanvas({
   }, [isGraphDone, boidGraph, addSimHistory]);
 
   useEffect(() => {
-    if (isGraphDone) {
+    if (isGraphDone && boidGraph && boidGraph.length > 0) {
       // console.log('bk: GraphCanvas.js: graph done: boidGraph: ', boidGraph);
       /*{numDead: 0,
         numImmune: 0,
@@ -37,7 +37,21 @@ export default function GraphCanvas({
         numNormal: 99,
         numTotal: 100}
         */
-      notifySimDone(true);
+       const boid_data = boidGraph.reduce( (acc, curr) => {
+         return {
+           ...acc,
+           immune_array: [...acc.immune_array, curr.numImmune],
+           dead_array: [...acc.dead_array, curr.numDead],
+           healthy_array: [...acc.healthy_array, curr.numNormal],
+           infected_array: [...acc.infected_array, curr.numInfected],
+         }
+       }, {population: boidGraph[0].numTotal,
+        immune_array: [],
+        dead_array: [],
+        healthy_array: [],
+        infected_array: []
+       })
+      notifySimDone(boid_data);
     }
   }, [isGraphDone, notifySimDone]);
 
