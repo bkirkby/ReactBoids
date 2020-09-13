@@ -22,12 +22,24 @@ export default function GraphCanvas({
       const histGraph = boidGraph.map(bg => {
         return bg.numInfected / bg.numNormal;
       });
-      //console.log("bk: GraphCanvas.js: GraphCanvas: histGraph: ", histGraph);
+      // console.log("bk: GraphCanvas.js: GraphCanvas: histGraph: ", histGraph);
       addSimHistory(histGraph);
       setIsGraphDone(false);
+    }
+  }, [isGraphDone, boidGraph, addSimHistory]);
+
+  useEffect(() => {
+    if (isGraphDone) {
+      // console.log('bk: GraphCanvas.js: graph done: boidGraph: ', boidGraph);
+      /*{numDead: 0,
+        numImmune: 0,
+        numInfected: 1,
+        numNormal: 99,
+        numTotal: 100}
+        */
       notifySimDone(true);
     }
-  }, [isGraphDone, boidGraph, addSimHistory, notifySimDone]);
+  }, [isGraphDone, notifySimDone]);
 
   useEffect(() => {
     addResetListener(() => {

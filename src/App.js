@@ -17,6 +17,8 @@ import SwarmCounters from "./SwarmCounters";
 import { createBunch, BUNCH_SIZE } from "./boidsUtils";
 import { generateNewBoid } from "./Boid";
 
+import { sendGraphRun } from './api';
+
 const useSimHistory = createPersistedState("sim-history");
 
 export default function App() {
@@ -38,7 +40,6 @@ export default function App() {
   const [showAbout, setShowAbout] = useState(false);
   const [showSimpleMenu, setShowSimpleMenu] = useState(true);
   const [showReplay, setShowReplay] = useState(false);
-  const [simRunning, setSimRunning] = useState(false);
   const [freeStyleMode, toggleFreeStyleMode] = useReducer(v => !v, false);
 
   useEffect(() => {
@@ -103,20 +104,22 @@ export default function App() {
 
   const notifySimDone = useCallback(
     simIsDone => {
-      if (simIsDone) {
+      if (simIsDone && simState === 'running') {
+        // console.log('bk: simIsDone: ', simIsDone, process.env.REACT_APP_API_SERVER);
+        console.log('bk: simIsDone: graphrun: ',
+          { isolation: isolationFactor,
+            social_distance: (sdFactor / 5).toFixed(1), //sdFactor,
+            population: boidsNormal.length,
+            dead_array: [],
+            immune_array: [],
+            healthy_array: [],
+            infected_array: []
+          });
         setSimState("done");
+        // sendGraphRun({
+          // isolation: 
+        // })
       }
-      // setShowReplay(!showSimpleMenu);
-      // setShowSimpleMenu(true);
-      // console.log(
-      //   "bk: App.js: notifySimDone: sim run time: ",
-      //   Date.now() -
-      //     boidsNormal
-      //       .filter(b => b.infectedTime)
-      //       .reduce((acc, val) =>
-      //         acc.infectedTime > val.infectedTime ? val : acc
-      //       )
-      // );
     },
     [boidsNormal]
   );
