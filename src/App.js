@@ -106,16 +106,14 @@ export default function App() {
     boidData => {
       if (boidData && simState === 'running') {
         // console.log('bk: simIsDone: ', simIsDone, process.env.REACT_APP_API_SERVER);
-        const combined_data = {
+        const graphData = {
           ...boidData,
           isolation: isolationFactor,
-          social_distance: (sdFactor /5).toFixed(1)
+          social_distance: Number((sdFactor /5).toFixed(1))
         }
-        console.log('bk: graphrun: ', combined_data );
+        console.log('bk: graphrun: ', graphData );
         setSimState("done");
-        // sendGraphRun({
-          // isolation: 
-        // })
+        sendGraphRun(graphData);
       }
     },
     [boidsNormal]
