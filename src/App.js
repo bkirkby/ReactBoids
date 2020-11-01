@@ -40,13 +40,14 @@ export default function App() {
   const [showAbout, setShowAbout] = useState(false);
   const [showSimpleMenu, setShowSimpleMenu] = useState(true);
   const [showReplay, setShowReplay] = useState(false);
-  const [freeStyleMode, toggleFreeStyleMode] = useReducer(v => !v, false);
+  // const [freeStyleMode, toggleFreeStyleMode] = useReducer(v => !v, false);
+  const [flockSize, setFlockSize] = useState(BUNCH_SIZE);
 
   useEffect(() => {
     const canvasNormal = document.getElementById("boidsCanvas-normal");
     setBoidsNormalCtx(canvasNormal.getContext("2d"));
 
-    setBoidsNormal(createBunch(BUNCH_SIZE, 0, canvasWidth, canvasHeight));
+    setBoidsNormal(createBunch(flockSize, 0, canvasWidth, canvasHeight));
     // setBoidsNormal([
     //   {
     //     ...generateNewBoid(),
@@ -57,7 +58,7 @@ export default function App() {
     //     infectedTime: 0
     //   }
     // ]);
-  }, [canvasWidth, canvasHeight]);
+  }, [canvasWidth, canvasHeight, flockSize]);
 
   useEffect(() => {
     if (simState === "running") {
@@ -109,9 +110,9 @@ export default function App() {
         const graphData = {
           ...boidData,
           isolation: isolationFactor,
-          social_distance: Number((sdFactor /5).toFixed(1))
+          social_distance: Number((sdFactor / 5).toFixed(1))
         }
-        console.log('bk: graphrun: ', graphData );
+        console.log('bk: graphrun: ', graphData);
         setSimState("done");
         sendGraphRun(graphData);
       }
@@ -154,8 +155,8 @@ export default function App() {
               setSdFactor={setSdFactor}
               reset={reset}
               setShowAbout={setShowAbout}
-              toggleFreeStyleMode={toggleFreeStyleMode}
-              freeStyleMode={freeStyleMode}
+              setFlockSize={setFlockSize}
+              flockSize={flockSize}
               setShowSimpleMenu={setShowSimpleMenu}
             />
           )}
@@ -172,7 +173,7 @@ export default function App() {
             isPaused={isPaused}
           />
 
-          <SwarmControl
+          {/* <SwarmControl
             isolationFactor={isolationFactor}
             sdFactor={sdFactor}
             setIsolationFactor={setIsolationFactor}
@@ -185,6 +186,14 @@ export default function App() {
             canvasWidth={canvasWidth}
             canvasHeight={canvasHeight}
             reset={reset}
+          /> */}
+          <SwarmControl
+            isolationFactor={isolationFactor}
+            setIsolationFactor={setIsolationFactor}
+            sdFactor={sdFactor}
+            setSdFactor={setSdFactor}
+            flockSize={flockSize}
+            setFlockSize={setFlockSize}
           />
         </div>
         {/*<SimulationHistory

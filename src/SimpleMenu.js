@@ -1,6 +1,6 @@
 import React from "react";
 
-import { createBunch, infectRandomBoid, BUNCH_SIZE } from "./boidsUtils";
+import { createBunch, infectRandomBoid } from "./boidsUtils";
 import { pageView } from "./googleAnalytics";
 
 const SimpleMenu = ({
@@ -12,8 +12,8 @@ const SimpleMenu = ({
   setSimState,
   reset,
   setShowAbout,
-  toggleFreeStyleMode,
-  freeStyleMode,
+  flockSize,
+  setFlockSize,
   setShowSimpleMenu
 }) => {
   const handleUnconstrained = () => {
@@ -21,13 +21,13 @@ const SimpleMenu = ({
     setIsolationFactor(0);
     setSdFactor(0);
     setSimState("running");
-    const newBoids = createBunch(BUNCH_SIZE, 0, canvasWidth, canvasHeight);
+    const newBoids = createBunch(flockSize, 0, canvasWidth, canvasHeight);
     setBoids(infectRandomBoid(newBoids));
     pageView("/unconstrained");
   };
 
   const handleIsolationConstrained = () => {
-    const population = BUNCH_SIZE;
+    const population = flockSize;
     const isolationFactor = 77;
     reset();
     setSdFactor(0);
@@ -44,7 +44,7 @@ const SimpleMenu = ({
   };
 
   const handleSdConstrained = () => {
-    const population = BUNCH_SIZE;
+    const population = flockSize;
     const sdFactor = 33; // 0 to 40
     reset();
     setSdFactor(sdFactor);
@@ -56,7 +56,7 @@ const SimpleMenu = ({
   };
 
   const handleBothConstrained = () => {
-    const population = BUNCH_SIZE;
+    const population = flockSize;
     const sdFactor = 33; // 0 to 40
     const isolationFactor = 77;
     reset();
@@ -109,8 +109,9 @@ const SimpleMenu = ({
       <button onClick={handleBothConstrained}>both constrained</button>
       <button
         onClick={() => {
-          toggleFreeStyleMode();
-          pageView(`/freestyle/${!freeStyleMode}`);
+          // toggleFreeStyleMode();
+          // pageView(`/freestyle/${!freeStyleMode}`);
+          setFlockSize(200);
         }}
       >
         freestyle mode

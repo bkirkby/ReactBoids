@@ -13,59 +13,61 @@ const SwarmControl = ({
   setSdFactor,
   isolationFactor,
   setIsolationFactor,
-  setBoids,
-  boids,
-  canvasWidth,
-  canvasHeight,
-  reset,
-  isPaused,
-  setIsPaused,
-  freeStyleMode
+  flockSize,
+  setFlockSize,
+  // setBoids,
+  // boids,
+  // canvasWidth,
+  // canvasHeight,
+  // reset,
+  // isPaused,
+  // setIsPaused,
+  // freeStyleMode
 }) => {
-  const handleInfect = () => {
-    setBoids(infectRandomBoid(boids));
-  };
+  // const handleInfect = () => {
+  //   setBoids(infectRandomBoid(boids));
+  // };
 
-  const handleAddBunch = () => {
-    const newBoids = createBunch(
-      BUNCH_SIZE,
-      isolationFactor,
-      canvasWidth,
-      canvasHeight
-    );
-    setBoids(boids => boids.concat(newBoids));
-  };
+  // const handleAddBunch = () => {
+  //   const newBoids = createBunch(
+  //     BUNCH_SIZE,
+  //     isolationFactor,
+  //     canvasWidth,
+  //     canvasHeight
+  //   );
+  //   setBoids(boids => boids.concat(newBoids));
+  // };
 
-  const handleRandomClick = () => {
-    setBoids(
-      boids.map(boid => {
-        return {
-          ...boid,
-          x: Math.random() * (canvasWidth - 0) + 0,
-          y: Math.random() * (canvasHeight - 0) + 0,
-          heading: Math.random() * 2 * Math.PI - Math.PI
-        };
-      })
-    );
-  };
+  // const handleRandomClick = () => {
+  //   setBoids(
+  //     boids.map(boid => {
+  //       return {
+  //         ...boid,
+  //         x: Math.random() * (canvasWidth - 0) + 0,
+  //         y: Math.random() * (canvasHeight - 0) + 0,
+  //         heading: Math.random() * 2 * Math.PI - Math.PI
+  //       };
+  //     })
+  //   );
+  // };
 
-  const handleAddOne = () => {
-    const isoFactor = isolationFactor / 100;
+  // const handleAddOne = () => {
+  //   const isoFactor = isolationFactor / 100;
 
-    setBoids([
-      ...boids,
-      {
-        ...generateNewBoid(),
-        x: Math.random() * canvasWidth,
-        y: Math.random() * canvasHeight,
-        speed: Math.random() < isoFactor ? 0 : getBoidSpeed()
-      }
-    ]);
-  };
+  //   setBoids([
+  //     ...boids,
+  //     {
+  //       ...generateNewBoid(),
+  //       x: Math.random() * canvasWidth,
+  //       y: Math.random() * canvasHeight,
+  //       speed: Math.random() < isoFactor ? 0 : getBoidSpeed()
+  //     }
+  //   ]);
+  // };
 
   return (
     <div className="swarmSliders">
-      {freeStyleMode && (
+      {/* {freeStyleMode && (
         <div className="swarmButtonsContainer">
           <button onClick={handleAddBunch}>add bunch</button>
           <button onClick={handleAddOne}>add one</button>
@@ -83,7 +85,17 @@ const SwarmControl = ({
             reset
           </button>
         </div>
-      )}
+      )} */}
+      <div className="sliderContainer">
+        <div className="sliderLabel">
+          <span>population:</span>
+          <span>{flockSize}</span>
+        </div>
+        <input onChange={e => {
+          e.preventDefault();
+          setFlockSize(Number(e.target.value));
+        }} id="popSlider" type="range" min="20" max="200" step="20" value={flockSize} />
+      </div>
       <div className="sliderContainer">
         <div className="sliderLabel">
           <span>social distancing:</span>
