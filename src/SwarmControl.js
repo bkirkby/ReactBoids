@@ -1,13 +1,5 @@
 import React from "react";
 
-import {
-  infectRandomBoid,
-  createBunch,
-  getBoidSpeed,
-  BUNCH_SIZE
-} from "./boidsUtils";
-import { generateNewBoid } from "./Boid";
-
 const SwarmControl = ({
   sdFactor,
   setSdFactor,
