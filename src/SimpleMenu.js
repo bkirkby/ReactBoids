@@ -106,7 +106,7 @@ const SimpleMenu = ({
             width: "100%"
           }}
         >
-          INFECTION SIMULATOR
+          POPULATION: {flockSize}
         </span>
         <button
           onClick={() => {
@@ -116,14 +116,14 @@ const SimpleMenu = ({
           X
         </button>
       </div>
-      <button onClick={handleUnconstrained}>pop:{flockSize} sd:0.0 iso:0</button>
-      <button onClick={handleSdConstrained}>pop:{flockSize} sd:{formatSDFactor(QUICK_SD_FACTOR)} iso:0</button>
+      <button onClick={handleUnconstrained}>unconstrained: sd:0.0 iso:0</button>
+      <button onClick={handleSdConstrained}>sd constrained: sd:{formatSDFactor(QUICK_SD_FACTOR)} iso:0</button>
       <button onClick={handleIsolationConstrained}>
-        pop:{flockSize} sd:0.0 iso:{QUICK_ISO_FACTOR}
+        iso constrained: sd:0.0 iso:{QUICK_ISO_FACTOR}
       </button>
-      <button onClick={handleBothConstrained}>pop:{flockSize} sd:{formatSDFactor(QUICK_SD_FACTOR)} iso:{QUICK_ISO_FACTOR}</button>
+      <button onClick={handleBothConstrained}>both constrained: sd:{formatSDFactor(QUICK_SD_FACTOR)} iso:{QUICK_ISO_FACTOR}</button>
       <button onClick={handleRegularRun} >
-        pop:{flockSize} sd:{formatSDFactor(sdFactor)} iso:{isolationFactor}
+        fine tuned: sd:{formatSDFactor(sdFactor)} iso:{isolationFactor}
       </button>
       <button
         onClick={() => {
