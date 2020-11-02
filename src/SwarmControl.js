@@ -15,83 +15,18 @@ const SwarmControl = ({
   setIsolationFactor,
   flockSize,
   setFlockSize,
-  // setBoids,
-  // boids,
-  // canvasWidth,
-  // canvasHeight,
-  // reset,
-  // isPaused,
-  // setIsPaused,
-  // freeStyleMode
+  simState,
 }) => {
-  // const handleInfect = () => {
-  //   setBoids(infectRandomBoid(boids));
-  // };
-
-  // const handleAddBunch = () => {
-  //   const newBoids = createBunch(
-  //     BUNCH_SIZE,
-  //     isolationFactor,
-  //     canvasWidth,
-  //     canvasHeight
-  //   );
-  //   setBoids(boids => boids.concat(newBoids));
-  // };
-
-  // const handleRandomClick = () => {
-  //   setBoids(
-  //     boids.map(boid => {
-  //       return {
-  //         ...boid,
-  //         x: Math.random() * (canvasWidth - 0) + 0,
-  //         y: Math.random() * (canvasHeight - 0) + 0,
-  //         heading: Math.random() * 2 * Math.PI - Math.PI
-  //       };
-  //     })
-  //   );
-  // };
-
-  // const handleAddOne = () => {
-  //   const isoFactor = isolationFactor / 100;
-
-  //   setBoids([
-  //     ...boids,
-  //     {
-  //       ...generateNewBoid(),
-  //       x: Math.random() * canvasWidth,
-  //       y: Math.random() * canvasHeight,
-  //       speed: Math.random() < isoFactor ? 0 : getBoidSpeed()
-  //     }
-  //   ]);
-  // };
+  const disabled = simState == "running";
 
   return (
     <div className="swarmSliders">
-      {/* {freeStyleMode && (
-        <div className="swarmButtonsContainer">
-          <button onClick={handleAddBunch}>add bunch</button>
-          <button onClick={handleAddOne}>add one</button>
-          <button onClick={handleRandomClick}>random</button>
-          <button onClick={handleInfect}>infect</button>
-          <button onClick={() => setIsPaused(!isPaused)}>
-            {isPaused ? "resume" : "pause"}
-          </button>
-          <button
-            onClick={e => {
-              reset();
-              setBoids([]);
-            }}
-          >
-            reset
-          </button>
-        </div>
-      )} */}
       <div className="sliderContainer">
         <div className="sliderLabel">
           <span>population:</span>
           <span>{flockSize}</span>
         </div>
-        <input onChange={e => {
+        <input disabled={disabled} onChange={e => {
           e.preventDefault();
           setFlockSize(Number(e.target.value));
         }} id="popSlider" type="range" min="20" max="200" step="20" value={flockSize} />
@@ -101,7 +36,7 @@ const SwarmControl = ({
           <span>social distancing:</span>
           <span>{(sdFactor / 5).toFixed(1)} δ</span>
         </div>
-        <input
+        <input disabled={disabled}
           onChange={e => {
             e.preventDefault();
             setSdFactor(Number(e.target.value));
@@ -119,7 +54,7 @@ const SwarmControl = ({
           <span>isolation: </span>
           <span>{isolationFactor}%</span>
         </div>
-        <input
+        <input disabled={disabled}
           onChange={e => {
             e.preventDefault();
             setIsolationFactor(Number(e.target.value));
@@ -128,7 +63,7 @@ const SwarmControl = ({
           type="range"
           min="0"
           max="100"
-          step="1"
+          step="5"
           value={isolationFactor}
         />
       </div>

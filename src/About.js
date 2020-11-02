@@ -32,8 +32,10 @@ const About = ({ setShowAbout }) => {
         </div>
         <p />
         tl;dr the menu items will run simulations based on the specified
-        constraints. you can also enter freestyle mode to play around with the
-        mitigation params.
+        constraints. to run a sim select one with the params you want to
+        run with. play around with the sliders to see how they affect the
+        simulation params.
+
         <p style={{ borderTop: "1px solid black" }} />
         the covid infection simulator was conceived during the covid19 lockdown
         of 2020. i wondered if even simple simulations would show the mitigation
@@ -60,7 +62,7 @@ const About = ({ setShowAbout }) => {
         pips also have a limit to how fast they are able to change their
         direction which creates a constant strain on competing desires, much
         like real life. the pip's social desires to go where other pips are and
-        in the same direction as other pips conflict with their constraints
+        in the same direction as other pips conflict with their constraints of
         staying put and/or staying away from other pips.
         <p />
         the virii behavior is extremely simple in that when an infected pip gets

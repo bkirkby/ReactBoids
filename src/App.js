@@ -7,7 +7,7 @@ import "./styles.css";
 import BirdCanvas from "./BirdCanvas";
 import GraphCanvas from "./GraphCanvas";
 import Swarm from "./Swarm";
-import SimulationHistory from "./SimulationHistory";
+// import SimulationHistory from "./SimulationHistory";
 import SimpleMenu from "./SimpleMenu";
 import ReplayMenu from "./ReplayMenu";
 import SwarmControl from "./SwarmControl";
@@ -15,7 +15,7 @@ import About from "./About";
 import SwarmCounters from "./SwarmCounters";
 
 import { createBunch, BUNCH_SIZE } from "./boidsUtils";
-import { generateNewBoid } from "./Boid";
+// import { generateNewBoid } from "./Boid";
 
 import { sendGraphRun } from './api';
 
@@ -48,16 +48,6 @@ export default function App() {
     setBoidsNormalCtx(canvasNormal.getContext("2d"));
 
     setBoidsNormal(createBunch(flockSize, 0, canvasWidth, canvasHeight));
-    // setBoidsNormal([
-    //   {
-    //     ...generateNewBoid(),
-    //     x: canvasWidth / 2,
-    //     y: canvasHeight / 2,
-    //     state: "dead",
-    //     speed: 0,
-    //     infectedTime: 0
-    //   }
-    // ]);
   }, [canvasWidth, canvasHeight, flockSize]);
 
   useEffect(() => {
@@ -65,12 +55,6 @@ export default function App() {
       setShowSimpleMenu(false);
     }
   }, [simState]);
-
-  // useEffect(() => {
-  //   if (freeStyleMode) {
-  //     setShowSimpleMenu(false);
-  //   }
-  // }, [freeStyleMode]);
 
   const addResetListener = useCallback(rl => {
     setResetCbs(rcb => [...rcb, rl]);
@@ -112,8 +96,9 @@ export default function App() {
           isolation: isolationFactor,
           social_distance: Number((sdFactor / 5).toFixed(1))
         }
-        console.log('bk: graphrun: ', graphData);
+        // console.log('bk: graphrun: ', graphData);
         setSimState("done");
+        setShowSimpleMenu(true);
         sendGraphRun(graphData);
       }
     },
@@ -152,7 +137,9 @@ export default function App() {
               canvasWidth={canvasWidth}
               canvasHeight={canvasHeight}
               setIsolationFactor={setIsolationFactor}
+              isolationFactor={isolationFactor}
               setSdFactor={setSdFactor}
+              sdFactor={sdFactor}
               reset={reset}
               setShowAbout={setShowAbout}
               setFlockSize={setFlockSize}
@@ -194,6 +181,7 @@ export default function App() {
             setSdFactor={setSdFactor}
             flockSize={flockSize}
             setFlockSize={setFlockSize}
+            simState={simState}
           />
         </div>
         {/*<SimulationHistory

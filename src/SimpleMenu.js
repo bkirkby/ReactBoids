@@ -5,7 +5,9 @@ import { pageView } from "./googleAnalytics";
 
 const SimpleMenu = ({
   setIsolationFactor,
+  isolationFactor,
   setSdFactor,
+  sdFactor,
   canvasWidth,
   canvasHeight,
   setBoids,
@@ -13,9 +15,13 @@ const SimpleMenu = ({
   reset,
   setShowAbout,
   flockSize,
-  setFlockSize,
   setShowSimpleMenu
 }) => {
+  const QUICK_ISO_FACTOR = 77;
+  const QUICK_SD_FACTOR = 33; // 0 to 40
+  const formatSDFactor = (sdFactor) => {
+    return (sdFactor / 5).toFixed(1);
+  }
   const handleUnconstrained = () => {
     reset();
     setIsolationFactor(0);
@@ -28,10 +34,9 @@ const SimpleMenu = ({
 
   const handleIsolationConstrained = () => {
     const population = flockSize;
-    const isolationFactor = 77;
     reset();
     setSdFactor(0);
-    setIsolationFactor(isolationFactor);
+    setIsolationFactor(QUICK_ISO_FACTOR);
     setSimState("running");
     const newBoids = createBunch(
       population,
@@ -45,9 +50,8 @@ const SimpleMenu = ({
 
   const handleSdConstrained = () => {
     const population = flockSize;
-    const sdFactor = 33; // 0 to 40
     reset();
-    setSdFactor(sdFactor);
+    setSdFactor(QUICK_SD_FACTOR);
     setIsolationFactor(0);
     setSimState("running");
     const newBoids = createBunch(population, 0, canvasWidth, canvasHeight);
@@ -57,11 +61,9 @@ const SimpleMenu = ({
 
   const handleBothConstrained = () => {
     const population = flockSize;
-    const sdFactor = 33; // 0 to 40
-    const isolationFactor = 77;
     reset();
-    setSdFactor(sdFactor);
-    setIsolationFactor(isolationFactor);
+    setSdFactor(QUICK_SD_FACTOR);
+    setIsolationFactor(QUICK_ISO_FACTOR);
     setSimState("running");
     const newBoids = createBunch(
       population,
@@ -72,6 +74,19 @@ const SimpleMenu = ({
     setBoids(infectRandomBoid(newBoids));
     pageView("/bothConstrained");
   };
+
+  const handleRegularRun = () => {
+    reset();
+    setSimState("running");
+    const newBoids = createBunch(
+      flockSize,
+      isolationFactor,
+      canvasWidth,
+      canvasHeight
+    );
+    setBoids(infectRandomBoid(newBoids));
+    pageView("/regularRun");
+  }
 
   return (
     <div className="simpleMenu">
@@ -101,20 +116,14 @@ const SimpleMenu = ({
           X
         </button>
       </div>
-      <button onClick={handleUnconstrained}>unconstrained</button>
-      <button onClick={handleSdConstrained}>social distance constrained</button>
+      <button onClick={handleUnconstrained}>pop:{flockSize} sd:0.0 iso:0</button>
+      <button onClick={handleSdConstrained}>pop:{flockSize} sd:{formatSDFactor(QUICK_SD_FACTOR)} iso:0</button>
       <button onClick={handleIsolationConstrained}>
-        isolation constrained
+        pop:{flockSize} sd:0.0 iso:{QUICK_ISO_FACTOR}
       </button>
-      <button onClick={handleBothConstrained}>both constrained</button>
-      <button
-        onClick={() => {
-          // toggleFreeStyleMode();
-          // pageView(`/freestyle/${!freeStyleMode}`);
-          setFlockSize(200);
-        }}
-      >
-        freestyle mode
+      <button onClick={handleBothConstrained}>pop:{flockSize} sd:{formatSDFactor(QUICK_SD_FACTOR)} iso:{QUICK_ISO_FACTOR}</button>
+      <button onClick={handleRegularRun} >
+        pop:{flockSize} sd:{formatSDFactor(sdFactor)} iso:{isolationFactor}
       </button>
       <button
         onClick={() => {
