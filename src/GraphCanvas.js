@@ -15,6 +15,10 @@ export default function GraphCanvas({
   const [boidGraph, setBoidGraph] = useState([]); // {numInfected:0, numNormal:0}
   const [lastGraphUpdate, setLastGraphUpdate] = useState(Date.now());
   const [isGraphDone, setIsGraphDone] = useState(false);
+  // latches true once the run has completed so completion is detected only
+  // once. Without this the "done" condition stays true and re-fires on every
+  // boid tick, flooding the app with re-renders (canvas flicker) and history.
+  const [isDone, setIsDone] = useState(false);
 
   useEffect(() => {
     // notify that graph is done
@@ -58,6 +62,7 @@ export default function GraphCanvas({
     addResetListener(() => {
       setBoidGraph([]);
       setIsGraphDone(false);
+      setIsDone(false);
     });
   }, [addResetListener]);
 
@@ -125,6 +130,11 @@ export default function GraphCanvas({
 
   useEffect(() => {
     // updateBoidGraph
+    if (isDone) {
+      // run already completed; stop detecting/redrawing until reset so we
+      // don't re-fire "done" on every boid tick.
+      return;
+    }
     const numInfected = boids.filter(b => b.state === "infected").length;
     const numImmune = boids.filter(b => b.state === "immune").length;
     if (shouldUpdateBoidGraph()) {
@@ -133,6 +143,7 @@ export default function GraphCanvas({
         boidGraph.length >= canvasWidth
       ) {
         // we are done
+        setIsDone(true);
         setIsGraphDone(true);
       } else {
         // update graph
@@ -155,7 +166,7 @@ export default function GraphCanvas({
         });
       }
     }
-  }, [boids, shouldUpdateBoidGraph, canvasWidth, boidGraph.length]);
+  }, [boids, shouldUpdateBoidGraph, canvasWidth, boidGraph.length, isDone]);
 
   return (
     <div className="graphContainer">
