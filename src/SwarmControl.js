@@ -7,6 +7,7 @@ const SwarmControl = ({
   setIsolationFactor,
   flockSize,
   setFlockSize,
+  flockSizeMax = 200,
   simState,
 }) => {
   const disabled = simState == "running";
@@ -31,7 +32,7 @@ const SwarmControl = ({
         <input disabled={disabled} onChange={e => {
           e.preventDefault();
           setFlockSize(Number(e.target.value));
-        }} id="popSlider" type="range" min="20" max="200" step="20" value={flockSize} />
+        }} id="popSlider" type="range" min="20" max={flockSizeMax} step="20" value={flockSize} />
       </div>
       <div className="sliderContainer">
         <div className="sliderLabel">

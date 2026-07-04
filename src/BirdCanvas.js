@@ -4,6 +4,7 @@ export default function BirdCanvas(props) {
   return (
     <canvas
       id={props.id}
+      className="boidsCanvas"
       width={props.canvasWidth}
       height={props.canvasHeight}
       style={{

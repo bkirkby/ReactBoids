@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useReducer } from "react";
+import React, { useEffect, useState, useCallback, useReducer, useRef } from "react";
 import sha1 from "sha1";
 import createPersistedState from "use-persisted-state";
 
@@ -19,12 +19,18 @@ import { createBunch, BUNCH_SIZE } from "./boidsUtils";
 
 const useSimHistory = createPersistedState("sim-history");
 
+// reference density: 100 boids comfortably filled the original 500x350 canvas
+const BOID_DENSITY = 100 / (500 * 350);
+// derive a population from a canvas area, snapped to the slider's step of 20
+const areaToPopulation = (area, mult = 1) =>
+  Math.max(20, Math.round((area * BOID_DENSITY * mult) / 20) * 20);
+
 export default function App() {
   const [boidsNormalCtx, setBoidsNormalCtx] = useState();
   // const [boidsSDCtx, setBoidsSDCtx] = useState();
   // const [boidsIsolationCtx, setBoidsIsolationCtx] = useState();
-  const [canvasWidth] = useState(500);
-  const [canvasHeight] = useState(350);
+  const [canvasWidth, setCanvasWidth] = useState(500);
+  const [canvasHeight, setCanvasHeight] = useState(350);
   const [graphWidth] = useState(500);
   const [graphHeight] = useState(50);
   const [boidsNormal, setBoidsNormal] = useState([]);
@@ -41,10 +47,50 @@ export default function App() {
   // const [freeStyleMode, toggleFreeStyleMode] = useReducer(v => !v, false);
   const [flockSize, setFlockSize] = useState(BUNCH_SIZE);
 
+  const canvasWrapRef = useRef(null);
+  // read the latest simState from effects without re-subscribing them
+  const simStateRef = useRef(simState);
+  simStateRef.current = simState;
+
+  // population slider ceiling scales with the canvas area (~2x the default)
+  const flockSizeMax = Math.max(40, areaToPopulation(canvasWidth * canvasHeight, 2));
+
+  // grab the drawing context once the canvas is mounted
   useEffect(() => {
     const canvasNormal = document.getElementById("boidsCanvas-normal");
-    setBoidsNormalCtx(canvasNormal.getContext("2d"));
+    if (canvasNormal) {
+      setBoidsNormalCtx(canvasNormal.getContext("2d"));
+    }
+  }, []);
 
+  // measure the space the canvas fills and keep the drawing buffer in sync
+  useEffect(() => {
+    const el = canvasWrapRef.current;
+    if (!el || typeof ResizeObserver === "undefined") return;
+    const measure = () => {
+      const w = Math.floor(el.clientWidth);
+      const h = Math.floor(el.clientHeight);
+      if (w > 0 && h > 0) {
+        setCanvasWidth(w);
+        setCanvasHeight(h);
+      }
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  // default the population from the canvas area (preserves the original
+  // density), only while idle so a running sim is never disturbed
+  useEffect(() => {
+    if (simStateRef.current === "running") return;
+    setFlockSize(areaToPopulation(canvasWidth * canvasHeight));
+  }, [canvasWidth, canvasHeight]);
+
+  // (re)seed the idle swarm when the size or population changes
+  useEffect(() => {
+    if (simStateRef.current === "running") return;
     setBoidsNormal(createBunch(flockSize, 0, canvasWidth, canvasHeight));
   }, [canvasWidth, canvasHeight, flockSize]);
 
@@ -114,12 +160,14 @@ export default function App() {
           setShowSimpleMenu={setShowSimpleMenu}
         />
         <div className="boidContainer">
-          <BirdCanvas
-            id="boidsCanvas-normal"
-            canvasWidth={canvasWidth}
-            canvasHeight={canvasHeight}
-            opacity={showSimpleMenu ? 0.2 : 1}
-          />
+          <div className="boidCanvasWrap" ref={canvasWrapRef}>
+            <BirdCanvas
+              id="boidsCanvas-normal"
+              canvasWidth={canvasWidth}
+              canvasHeight={canvasHeight}
+              opacity={showSimpleMenu ? 0.2 : 1}
+            />
+          </div>
           {showSimpleMenu && (
             <SimpleMenu
               setBoids={setBoidsNormal}
@@ -171,6 +219,7 @@ export default function App() {
             setSdFactor={setSdFactor}
             flockSize={flockSize}
             setFlockSize={setFlockSize}
+            flockSizeMax={flockSizeMax}
             simState={simState}
           />
         </div>
