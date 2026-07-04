@@ -17,8 +17,6 @@ import SwarmCounters from "./SwarmCounters";
 import { createBunch, BUNCH_SIZE } from "./boidsUtils";
 // import { generateNewBoid } from "./Boid";
 
-import { sendGraphRun } from './api';
-
 const useSimHistory = createPersistedState("sim-history");
 
 export default function App() {
@@ -90,16 +88,8 @@ export default function App() {
   const notifySimDone = useCallback(
     boidData => {
       if (boidData && simState === 'running') {
-        // console.log('bk: simIsDone: ', simIsDone, process.env.REACT_APP_API_SERVER);
-        const graphData = {
-          ...boidData,
-          isolation: isolationFactor,
-          social_distance: Number((sdFactor / 5).toFixed(1))
-        }
-        // console.log('bk: graphrun: ', graphData);
         setSimState("done");
         setShowSimpleMenu(true);
-        sendGraphRun(graphData);
       }
     },
     [boidsNormal]
