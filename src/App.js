@@ -14,7 +14,7 @@ import SwarmControl from "./SwarmControl";
 import About from "./About";
 import SwarmCounters from "./SwarmCounters";
 
-import { createBunch, BUNCH_SIZE } from "./boidsUtils";
+import { createBunch, BUNCH_SIZE, infectRandomBoid } from "./boidsUtils";
 // import { generateNewBoid } from "./Boid";
 
 const useSimHistory = createPersistedState("sim-history");
@@ -24,6 +24,18 @@ const BOID_DENSITY = 100 / (500 * 350);
 // derive a population from a canvas area, snapped to the slider's step of 20
 const areaToPopulation = (area, mult = 1) =>
   Math.max(20, Math.round((area * BOID_DENSITY * mult) / 20) * 20);
+
+const PlayIcon = () => (
+  <svg className="simToggleIcon" viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M8 5v14l11-7z" />
+  </svg>
+);
+
+const StopIcon = () => (
+  <svg className="simToggleIcon" viewBox="0 0 24 24" aria-hidden="true">
+    <rect x="6" y="6" width="12" height="12" />
+  </svg>
+);
 
 export default function App() {
   const [boidsNormalCtx, setBoidsNormalCtx] = useState();
@@ -110,6 +122,26 @@ export default function App() {
     });
   };
 
+  // start a run using the current slider parameters (same as the "fine tuned"
+  // menu preset); used by the play button
+  const startRun = () => {
+    reset();
+    setSimState("running");
+    const newBoids = createBunch(
+      flockSize,
+      isolationFactor,
+      canvasWidth,
+      canvasHeight
+    );
+    setBoidsNormal(infectRandomBoid(newBoids));
+  };
+
+  // stop the current run and bring the menu back
+  const stopRun = () => {
+    setSimState("done");
+    setShowSimpleMenu(true);
+  };
+
   const addSimHistory = useCallback(
     graphData => {
       // construct obj
@@ -145,15 +177,24 @@ export default function App() {
     <div className="app">
       {showAbout && <About setShowAbout={setShowAbout} />}
       <div className="normalContainer" style={{ opacity: showAbout ? 0.2 : 1 }}>
-        <GraphCanvas
-          boids={boidsNormal}
-          canvasWidth={graphWidth}
-          canvasHeight={graphHeight}
-          id={"graphCanvas-normal"}
-          addResetListener={addResetListener}
-          addSimHistory={addSimHistory}
-          notifySimDone={notifySimDone}
-        />
+        <div className="graphRow">
+          <button
+            className="simToggle"
+            onClick={simState === "running" ? stopRun : startRun}
+            aria-label={simState === "running" ? "stop simulation" : "start simulation"}
+          >
+            {simState === "running" ? <StopIcon /> : <PlayIcon />}
+          </button>
+          <GraphCanvas
+            boids={boidsNormal}
+            canvasWidth={graphWidth}
+            canvasHeight={graphHeight}
+            id={"graphCanvas-normal"}
+            addResetListener={addResetListener}
+            addSimHistory={addSimHistory}
+            notifySimDone={notifySimDone}
+          />
+        </div>
         <SwarmCounters
           boids={boidsNormal}
           showSimpleMenu={showSimpleMenu}
@@ -196,6 +237,7 @@ export default function App() {
             isolationFactor={isolationFactor}
             sdFactor={sdFactor}
             isPaused={isPaused}
+            simState={simState}
           />
 
           {/* <SwarmControl

@@ -17,7 +17,8 @@ export default function Swarm({
   boids,
   setBoids,
   sdFactor,
-  isPaused
+  isPaused,
+  simState
 }) {
   const [step, setStep] = useState(1);
   const [infectionRadius, setInfectionRadius] = useState(3);
@@ -213,7 +214,8 @@ export default function Swarm({
   // }, [isolationFactor, setBoids]);
 
   useEffect(() => {
-    // setup code here
+    // only animate while a run is in progress; otherwise the boids hold still
+    if (simState !== "running") return;
     const intervalId = setInterval(() => {
       handleStep();
     }, 40);
@@ -221,7 +223,7 @@ export default function Swarm({
       // teardown code here
       clearInterval(intervalId);
     };
-  }, [handleStep]);
+  }, [handleStep, simState]);
 
   clearCanvas();
 
