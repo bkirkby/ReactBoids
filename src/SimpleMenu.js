@@ -38,7 +38,7 @@ const SimpleMenu = ({
     setSimState("running");
     const newBoids = createBunch(
       population,
-      isolationFactor,
+      QUICK_ISO_FACTOR,
       canvasWidth,
       canvasHeight
     );
@@ -63,7 +63,7 @@ const SimpleMenu = ({
     setSimState("running");
     const newBoids = createBunch(
       population,
-      isolationFactor,
+      QUICK_ISO_FACTOR,
       canvasWidth,
       canvasHeight
     );
