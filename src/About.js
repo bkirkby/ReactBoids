@@ -19,16 +19,6 @@ const About = ({ setShowAbout }) => {
           <span style={{ paddingBottom: "0px", fontSize: "xx-large" }}>
             infection simulator
           </span>
-          <span style={{ paddingTop: "0px", fontSize: "small" }}>
-            by{" "}
-            <a
-              target="_blank"
-              rel="noopener noreferrer"
-              href="https://www.buymeacoffee.com/briankirkby"
-            >
-              kirkby
-            </a>
-          </span>
         </div>
         <p />
         tl;dr the menu items will run simulations based on the specified
