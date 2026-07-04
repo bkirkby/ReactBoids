@@ -11,12 +11,12 @@ export const calcAlignmentHeading = neighbors => {
     return null;
   }
 
-  let avgHeading = neighbors
-    .map(neighbor => neighbor.heading)
-    .reduce((accumulator, neighborHeading) => accumulator + neighborHeading);
-  avgHeading = avgHeading / neighbors.length;
+  // average the headings as a circular quantity (sum the unit vectors, then
+  // atan2) so angles that straddle the +/-PI wrap don't bias toward 0 (right)
+  const sumSin = neighbors.reduce((s, n) => s + Math.sin(n.heading), 0);
+  const sumCos = neighbors.reduce((s, n) => s + Math.cos(n.heading), 0);
 
-  return avgHeading;
+  return Math.atan2(sumSin, sumCos);
 };
 
 export const calcCohesionHeading = (boid, neighbors) => {
