@@ -7,7 +7,6 @@
   "dependencies": {
     "@material-ui/core": "4.12.4",
     "@material-ui/icons": "4.11.3",
-    "axios": "^0.33.0",
     "dotenv": "^8.6.0",
     "react": "16.14.0",
     "react-dom": "16.14.0",
@@ -26,7 +25,7 @@
     "eject": "react-scripts eject"
   },
   "engines": {
-    "node": "24.x"
+    "node": ">=18"
   },
   "browserslist": [
     ">0.2%",

@@ -1,10 +1,11 @@
 # ReactBoids
-This is the Covid Sim User Client for the covid simulator system.
+A browser-based Covid infection simulator built on a boids flocking model.
+Explore how social distancing and isolation affect the way an infection
+spreads through a population of "pips". The simulation runs entirely in the
+browser.
 
 ## development
 * fork and clone this repo to your local machine
-* create a .env file in the root of the project that contains the following:
-  * REACT_APP_API_SERVER=http://localhost:8081
 * open a console window and start the covid sim client by entering `yarn start`
 
 the covid sim client should then start in your default browser on http://localhost:3000
