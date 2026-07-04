@@ -1,7 +1,6 @@
 import React from "react";
 
 import { createBunch, infectRandomBoid } from "./boidsUtils";
-import { pageView } from "./googleAnalytics";
 
 const SimpleMenu = ({
   setIsolationFactor,
@@ -29,7 +28,6 @@ const SimpleMenu = ({
     setSimState("running");
     const newBoids = createBunch(flockSize, 0, canvasWidth, canvasHeight);
     setBoids(infectRandomBoid(newBoids));
-    pageView("/unconstrained");
   };
 
   const handleIsolationConstrained = () => {
@@ -45,7 +43,6 @@ const SimpleMenu = ({
       canvasHeight
     );
     setBoids(infectRandomBoid(newBoids));
-    pageView("/isolationConstrained");
   };
 
   const handleSdConstrained = () => {
@@ -56,7 +53,6 @@ const SimpleMenu = ({
     setSimState("running");
     const newBoids = createBunch(population, 0, canvasWidth, canvasHeight);
     setBoids(infectRandomBoid(newBoids));
-    pageView("/sdConstrained");
   };
 
   const handleBothConstrained = () => {
@@ -72,7 +68,6 @@ const SimpleMenu = ({
       canvasHeight
     );
     setBoids(infectRandomBoid(newBoids));
-    pageView("/bothConstrained");
   };
 
   const handleRegularRun = () => {
@@ -85,7 +80,6 @@ const SimpleMenu = ({
       canvasHeight
     );
     setBoids(infectRandomBoid(newBoids));
-    pageView("/regularRun");
   }
 
   return (
@@ -128,7 +122,6 @@ const SimpleMenu = ({
       <button
         onClick={() => {
           setShowAbout(true);
-          pageView("/about");
         }}
       >
         about
