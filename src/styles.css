@@ -132,6 +132,44 @@ svg {
 div.swarmSliders {
   display: flex;
   flex-flow: column wrap;
+  position: relative;
+}
+
+.swarmLockOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(7, 7, 69, 0.6);
+  z-index: 2;
+  cursor: not-allowed;
+}
+
+.swarmLockLabel {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: "VT323", monospace;
+  font-size: large;
+  color: #ffcc00;
+  background-color: #454545;
+  border: 2px solid black;
+  border-radius: 3px;
+  padding: 4px 12px;
+  text-align: center;
+  max-width: 90%;
+}
+
+.swarmLockLabel .lockIcon {
+  /* override the global `svg` border/padding rule */
+  border: none;
+  padding: 0;
+  fill: #ffcc00;
+  flex-shrink: 0;
 }
 
 div.sliderContainer {
@@ -169,6 +207,7 @@ div.simpleMenu {
   transform: translateX(-50%);
   margin-top: 25px;
   max-width: 92vw;
+  z-index: 3;
 }
 
 div.replayMenu {
@@ -180,6 +219,7 @@ div.replayMenu {
   transform: translateX(-50%);
   margin-top: 25px;
   background-color: grey;
+  z-index: 3;
 }
 
 #menuButton {
