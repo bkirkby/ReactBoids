@@ -37,6 +37,20 @@ const StopIcon = () => (
   </svg>
 );
 
+// build a summary of a run that just ended.
+// reason: "cleared" (no infected left) | "stopped" (manually stopped)
+const buildSummary = (reason, boids, startMs) => {
+  const total = boids.length;
+  const everSick = boids.filter(
+    b => b.state === "infected" || b.state === "immune" || b.state === "dead"
+  ).length;
+  return {
+    reason,
+    pctSick: total > 0 ? Math.round((everSick / total) * 100) : 0,
+    durationMs: startMs ? Date.now() - startMs : 0
+  };
+};
+
 export default function App() {
   const [boidsNormalCtx, setBoidsNormalCtx] = useState();
   // const [boidsSDCtx, setBoidsSDCtx] = useState();
@@ -67,6 +81,9 @@ export default function App() {
   // one-time auto-start so the first run uses the real (fluid) canvas size
   const [canvasMeasured, setCanvasMeasured] = useState(false);
   const autoStartedRef = useRef(false);
+  // wall-clock start of the current run, and the summary of the last one
+  const runStartRef = useRef(null);
+  const [summary, setSummary] = useState(null);
 
   // population slider ceiling scales with the canvas area (~2x the default)
   const flockSizeMax = Math.max(40, areaToPopulation(canvasWidth * canvasHeight, 2));
@@ -128,6 +145,8 @@ export default function App() {
   useEffect(() => {
     if (simState === "running") {
       setShowSimpleMenu(false);
+      runStartRef.current = Date.now();
+      setSummary(null);
     }
   }, [simState]);
 
@@ -157,6 +176,7 @@ export default function App() {
 
   // stop the current run and bring the menu back
   const stopRun = () => {
+    setSummary(buildSummary("stopped", boidsNormal, runStartRef.current));
     setSimState("done");
     setShowSimpleMenu(true);
   };
@@ -185,6 +205,7 @@ export default function App() {
   const notifySimDone = useCallback(
     boidData => {
       if (boidData && simState === 'running') {
+        setSummary(buildSummary("cleared", boidsNormal, runStartRef.current));
         setSimState("done");
         setShowSimpleMenu(true);
       }
@@ -243,6 +264,7 @@ export default function App() {
               setFlockSize={setFlockSize}
               flockSize={flockSize}
               setShowSimpleMenu={setShowSimpleMenu}
+              summary={summary}
             />
           )}
           {showReplay && <ReplayMenu />}
