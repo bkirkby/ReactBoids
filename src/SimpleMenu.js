@@ -14,7 +14,8 @@ const SimpleMenu = ({
   reset,
   setShowAbout,
   flockSize,
-  setShowSimpleMenu
+  setShowSimpleMenu,
+  summary
 }) => {
   const QUICK_ISO_FACTOR = 77;
   const QUICK_SD_FACTOR = 33; // 0 to 40
@@ -126,6 +127,27 @@ const SimpleMenu = ({
       >
         about
       </button>
+      {summary && (
+        <div className="simSummary">
+          <div className="simSummaryTitle">last run</div>
+          <div className="simSummaryRow">
+            <span>got sick:</span>
+            <span>{summary.pctSick}% of population</span>
+          </div>
+          <div className="simSummaryRow">
+            <span>ended:</span>
+            <span>
+              {summary.reason === "cleared"
+                ? "no more infected"
+                : "manually stopped"}
+            </span>
+          </div>
+          <div className="simSummaryRow">
+            <span>time to immunity:</span>
+            <span>{(summary.durationMs / 1000).toFixed(1)}s</span>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
