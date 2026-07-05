@@ -54,7 +54,7 @@ export default function App() {
   const [simHistory, setSimHistory] = useState({});
   const [isPaused, setIsPaused] = useState(false);
   const [showAbout, setShowAbout] = useState(false);
-  const [showSimpleMenu, setShowSimpleMenu] = useState(true);
+  const [showSimpleMenu, setShowSimpleMenu] = useState(false);
   const [showReplay, setShowReplay] = useState(false);
   // const [freeStyleMode, toggleFreeStyleMode] = useReducer(v => !v, false);
   const [flockSize, setFlockSize] = useState(BUNCH_SIZE);
@@ -63,6 +63,10 @@ export default function App() {
   // read the latest simState from effects without re-subscribing them
   const simStateRef = useRef(simState);
   simStateRef.current = simState;
+  // becomes true after the canvas has been measured at least once; gates the
+  // one-time auto-start so the first run uses the real (fluid) canvas size
+  const [canvasMeasured, setCanvasMeasured] = useState(false);
+  const autoStartedRef = useRef(false);
 
   // population slider ceiling scales with the canvas area (~2x the default)
   const flockSizeMax = Math.max(40, areaToPopulation(canvasWidth * canvasHeight, 2));
@@ -78,16 +82,18 @@ export default function App() {
   // measure the space the canvas fills and keep the drawing buffer in sync
   useEffect(() => {
     const el = canvasWrapRef.current;
-    if (!el || typeof ResizeObserver === "undefined") return;
+    if (!el) return;
     const measure = () => {
       const w = Math.floor(el.clientWidth);
       const h = Math.floor(el.clientHeight);
       if (w > 0 && h > 0) {
         setCanvasWidth(w);
         setCanvasHeight(h);
+        setCanvasMeasured(true);
       }
     };
     measure();
+    if (typeof ResizeObserver === "undefined") return;
     const ro = new ResizeObserver(measure);
     ro.observe(el);
     return () => ro.disconnect();
@@ -105,6 +111,19 @@ export default function App() {
     if (simStateRef.current === "running") return;
     setBoidsNormal(createBunch(flockSize, 0, canvasWidth, canvasHeight));
   }, [canvasWidth, canvasHeight, flockSize]);
+
+  // on first load, immediately start an unconstrained run so the first thing
+  // visitors see is the boids in motion (rather than the menu). Waits for the
+  // canvas to be measured so the run uses the real fluid size.
+  useEffect(() => {
+    if (autoStartedRef.current || !canvasMeasured || !boidsNormalCtx) return;
+    autoStartedRef.current = true;
+    const pop = areaToPopulation(canvasWidth * canvasHeight);
+    setFlockSize(pop);
+    const newBoids = createBunch(pop, 0, canvasWidth, canvasHeight);
+    setBoidsNormal(infectRandomBoid(newBoids));
+    setSimState("running");
+  }, [canvasMeasured, boidsNormalCtx, canvasWidth, canvasHeight]);
 
   useEffect(() => {
     if (simState === "running") {
