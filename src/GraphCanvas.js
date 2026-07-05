@@ -138,31 +138,28 @@ export default function GraphCanvas({
     const numInfected = boids.filter(b => b.state === "infected").length;
     const numImmune = boids.filter(b => b.state === "immune").length;
     if (shouldUpdateBoidGraph()) {
-      if (
-        (numInfected === 0 && numImmune > 0) ||
-        boidGraph.length >= canvasWidth
-      ) {
-        // we are done
+      if (numInfected === 0 && numImmune > 0) {
+        // no infected left -> the run is over
         setIsDone(true);
         setIsGraphDone(true);
       } else {
-        // update graph
+        // append the new sample, keeping only the last canvasWidth of them so
+        // the graph scrolls: once full, old samples fall off the left edge and
+        // new ones enter from the right
         setBoidGraph(boidGraph => {
-          // only add to boidGraph if we have canvas space to show it
-          if (boidGraph.length < canvasWidth) {
-            return [
-              ...boidGraph,
-              {
-                numTotal: boids.length,
-                numNormal: boids.filter(b => b.state === "normal").length,
-                numInfected: boids.filter(b => b.state === "infected").length,
-                numImmune: boids.filter(b => b.state === "immune").length,
-                numDead: boids.filter(b => b.state === "dead").length
-              }
-            ];
-          }
-          // setIsGraphDone(true);
-          return boidGraph;
+          const next = [
+            ...boidGraph,
+            {
+              numTotal: boids.length,
+              numNormal: boids.filter(b => b.state === "normal").length,
+              numInfected: boids.filter(b => b.state === "infected").length,
+              numImmune: boids.filter(b => b.state === "immune").length,
+              numDead: boids.filter(b => b.state === "dead").length
+            }
+          ];
+          return next.length > canvasWidth
+            ? next.slice(next.length - canvasWidth)
+            : next;
         });
       }
     }
