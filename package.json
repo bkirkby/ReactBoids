@@ -13,7 +13,7 @@
     "react-scripts": "3.4.4",
     "sha1": "1.1.1",
     "use-persisted-state": "0.3.3",
-    "uuid": "7.0.3"
+    "uuid": "14.0.0"
   },
   "devDependencies": {
     "typescript": "3.9.10"
