@@ -1,5 +1,9 @@
 import React, { useEffect } from "react";
-import { v4 as uuidv4 } from "uuid";
+
+// simple monotonic id generator for boids (unique per page session); ids are
+// only used as React keys and for neighbor/self identity comparisons
+let boidSeq = 0;
+const nextBoidId = () => `boid-${boidSeq++}`;
 
 export const generateNewBoid = () => {
   return {
@@ -7,7 +11,7 @@ export const generateNewBoid = () => {
     y: undefined,
     speed: undefined,
     infectedTime: undefined,
-    id: uuidv4(),
+    id: nextBoidId(),
     radius: 2,
     heading: Math.random() * 2 * Math.PI - Math.PI,
     vision: 35,
