@@ -19,3 +19,16 @@ be made live in production.
 
 for those of you forking the code, feel free to submit pull requests on any
 changes you made.
+
+## analytics
+the app reports a handful of engagement events to Google Analytics 4 (gtag.js)
+via `src/analytics.js`:
+* `page_view` (automatic)
+* `run_start` — when a user starts a run, with a `source` (play / preset name)
+* `run_stop` — when a user stops a run
+* `about_opened` — when the About screen is opened
+
+analytics only sends data in a **production build**; in development, events buffer
+into `window.dataLayer` but nothing is sent to Google. the measurement id defaults
+to the project's own but can be overridden with a `REACT_APP_GA_MEASUREMENT_ID`
+environment variable. forkers should set their own id (or remove `src/analytics.js`).
