@@ -5,9 +5,7 @@ import { track } from "./analytics";
 
 const SimpleMenu = ({
   setIsolationFactor,
-  isolationFactor,
   setSdFactor,
-  sdFactor,
   canvasWidth,
   canvasHeight,
   setBoids,
@@ -76,19 +74,6 @@ const SimpleMenu = ({
     setBoids(infectRandomBoid(newBoids));
   };
 
-  const handleRegularRun = () => {
-    track("run_start", { source: "fine_tuned" });
-    reset();
-    setSimState("running");
-    const newBoids = createBunch(
-      flockSize,
-      isolationFactor,
-      canvasWidth,
-      canvasHeight
-    );
-    setBoids(infectRandomBoid(newBoids));
-  }
-
   return (
     <div className="simpleMenu">
       <div
@@ -123,9 +108,6 @@ const SimpleMenu = ({
         iso constrained: sd:0.0 iso:{QUICK_ISO_FACTOR}
       </button>
       <button onClick={handleBothConstrained}>both constrained: sd:{formatSDFactor(QUICK_SD_FACTOR)} iso:{QUICK_ISO_FACTOR}</button>
-      <button onClick={handleRegularRun} >
-        fine tuned: sd:{formatSDFactor(sdFactor)} iso:{isolationFactor}
-      </button>
       <button
         onClick={() => {
           track("about_opened");
