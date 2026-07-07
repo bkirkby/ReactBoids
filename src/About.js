@@ -3,14 +3,13 @@ import React from "react";
 const About = ({ setShowAbout }) => {
   return (
     <div className="about">
-      <div
-        style={{
-          width: "100%",
-          marginRight: "5px"
-        }}
-      >
-        <button style={{ width: "100%" }} onClick={() => setShowAbout(false)}>
-          close
+      <div className="aboutHeader">
+        <button
+          className="aboutClose"
+          aria-label="close"
+          onClick={() => setShowAbout(false)}
+        >
+          ×
         </button>
       </div>
       <div className="scrollable">

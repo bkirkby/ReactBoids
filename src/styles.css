@@ -343,17 +343,55 @@ div.about {
   font-family: "Roboto", sans-serif;
 }
 
-div.about > button {
-  width: 100%;
+.aboutHeader {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 5px;
+}
+
+.aboutClose {
+  font-family: "VT323", monospace;
+  font-size: x-large;
+  line-height: 1;
+  color: #ffcc00;
+  background-color: #454545;
+  border: 2px solid black;
+  padding: 0 8px;
+  cursor: pointer;
+}
+
+.aboutClose:hover {
+  color: #fbff00;
+  background-color: #353535;
 }
 
 div.scrollable {
   font-family: "Roboto", sans-serif;
   font-size: medium;
-  overflow-y: scroll;
+  overflow-y: auto;
   flex: 1 1 auto;
   min-height: 0;
   border-top: 5px solid #454545;
+  scrollbar-width: thin;
+  scrollbar-color: #ffcc00 #2a2a2a;
+}
+
+div.scrollable::-webkit-scrollbar {
+  width: 8px;
+}
+
+div.scrollable::-webkit-scrollbar-track {
+  background: #2a2a2a;
+}
+
+div.scrollable::-webkit-scrollbar-thumb {
+  background-color: #ffcc00;
+  border-radius: 4px;
+  border: 2px solid #2a2a2a;
+}
+
+div.scrollable::-webkit-scrollbar-thumb:hover {
+  background-color: #fbff00;
 }
 
 div.about > h2 {
