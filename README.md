@@ -28,7 +28,7 @@ via `src/analytics.js`:
 * `run_stop` — when a user stops a run
 * `about_opened` — when the About screen is opened
 
-analytics only send data in a **production build**; in development, events buffer
+analytics only sends data in a **production build**; in development, events buffer
 into `window.dataLayer` but nothing is sent to Google. the measurement id defaults
 to the project's own but can be overridden with a `REACT_APP_GA_MEASUREMENT_ID`
 environment variable. forkers should set their own id (or remove `src/analytics.js`).
