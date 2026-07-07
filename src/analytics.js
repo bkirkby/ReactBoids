@@ -6,7 +6,8 @@
 // Google in a production build; in dev, events still buffer into window.dataLayer
 // (never leaving the browser) which keeps the wiring testable.
 
-const GA_ID = process.env.REACT_APP_GA_MEASUREMENT_ID || "G-5C7CQL933S";
+const envGaId = process.env.REACT_APP_GA_MEASUREMENT_ID;
+const GA_ID = envGaId !== undefined ? envGaId : "G-5C7CQL933S";
 const SEND = process.env.NODE_ENV === "production" && !!GA_ID;
 
 function ensureGtag() {
