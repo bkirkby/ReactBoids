@@ -15,6 +15,7 @@ import About from "./About";
 import SwarmCounters from "./SwarmCounters";
 
 import { createBunch, BUNCH_SIZE, infectRandomBoid } from "./boidsUtils";
+import { track } from "./analytics";
 // import { generateNewBoid } from "./Boid";
 
 const useSimHistory = createPersistedState("sim-history");
@@ -163,6 +164,7 @@ export default function App() {
   // start a run using the current slider parameters (same as the "fine tuned"
   // menu preset); used by the play button
   const startRun = () => {
+    track("run_start", { source: "play" });
     reset();
     setSimState("running");
     const newBoids = createBunch(
@@ -176,6 +178,7 @@ export default function App() {
 
   // stop the current run and bring the menu back
   const stopRun = () => {
+    track("run_stop");
     setSummary(buildSummary("stopped", boidsNormal, runStartRef.current));
     setSimState("done");
     setShowSimpleMenu(true);

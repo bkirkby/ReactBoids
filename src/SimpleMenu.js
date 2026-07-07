@@ -1,6 +1,7 @@
 import React from "react";
 
 import { createBunch, infectRandomBoid } from "./boidsUtils";
+import { track } from "./analytics";
 
 const SimpleMenu = ({
   setIsolationFactor,
@@ -23,6 +24,7 @@ const SimpleMenu = ({
     return (sdFactor / 5).toFixed(1);
   }
   const handleUnconstrained = () => {
+    track("run_start", { source: "unconstrained" });
     reset();
     setIsolationFactor(0);
     setSdFactor(0);
@@ -32,6 +34,7 @@ const SimpleMenu = ({
   };
 
   const handleIsolationConstrained = () => {
+    track("run_start", { source: "iso_constrained" });
     const population = flockSize;
     reset();
     setSdFactor(0);
@@ -47,6 +50,7 @@ const SimpleMenu = ({
   };
 
   const handleSdConstrained = () => {
+    track("run_start", { source: "sd_constrained" });
     const population = flockSize;
     reset();
     setSdFactor(QUICK_SD_FACTOR);
@@ -57,6 +61,7 @@ const SimpleMenu = ({
   };
 
   const handleBothConstrained = () => {
+    track("run_start", { source: "both_constrained" });
     const population = flockSize;
     reset();
     setSdFactor(QUICK_SD_FACTOR);
@@ -72,6 +77,7 @@ const SimpleMenu = ({
   };
 
   const handleRegularRun = () => {
+    track("run_start", { source: "fine_tuned" });
     reset();
     setSimState("running");
     const newBoids = createBunch(
@@ -122,6 +128,7 @@ const SimpleMenu = ({
       </button>
       <button
         onClick={() => {
+          track("about_opened");
           setShowAbout(true);
         }}
       >
