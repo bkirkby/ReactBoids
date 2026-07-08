@@ -13,6 +13,7 @@ import ReplayMenu from "./ReplayMenu";
 import SwarmControl from "./SwarmControl";
 import About from "./About";
 import SwarmCounters from "./SwarmCounters";
+import Footer from "./Footer";
 
 import { createBunch, BUNCH_SIZE, infectRandomBoid } from "./boidsUtils";
 import { track } from "./analytics";
@@ -314,6 +315,7 @@ export default function App() {
           svgWidth={graphWidth}
           svgHeight={graphHeight}
         />*/}
+        <Footer />
       </div>
     </div>
   );
